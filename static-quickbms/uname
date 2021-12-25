@@ -1,0 +1,2 @@
+#!/bin/ash
+/bin/uname "$@"|awk '{gsub(/x86_64/,"i686");v=-1}1;END{exit v+1}'

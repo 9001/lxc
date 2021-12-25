@@ -1,0 +1,13 @@
+{
+  "CN": "Nandes CA",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "O": "Nandes",
+      "OU": "Snakeoil CA"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# centos7 / gcc 4.8.5 cannot do c11 atomics;
+# this workaround is scheduled for removal in a future version of mpv
+RUN cd mpv-build \
+    && printf '%s\n' --disable-stdatomic >> mpv_options

@@ -1,0 +1,8 @@
+FROM gentoo-native-ffmpeg-src
+MAINTAINER ed <gentoo-native-ffmpeg@ocv.me>
+
+# same as last step in Dockerfile-src except no -f
+RUN --security=insecure \
+    sed -ri '/^CPU_FLAGS_X86=/d' /etc/portage/make.conf \
+    && cpuid2cpuflags | sed -r 's/: /="/;s/$/"/' >> /etc/portage/make.conf \
+    && emerge --color y -NuDv @world ffmpeg 

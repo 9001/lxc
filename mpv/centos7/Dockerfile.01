@@ -1,0 +1,80 @@
+FROM centos:7
+MAINTAINER ed <build-mpv@ocv.me>
+
+SHELL ["/bin/bash","-c"]
+
+# strongly related packages are grouped on one line
+#
+# disabled; pulls in opus, making ffmpeg do dynamic linking:
+#        jack-audio-connection-kit-devel \
+#
+# disabled; turns into an unsatisfiable mess at runtime:
+#        libsmbclient-devel \
+
+RUN yum -y --enablerepo=extras install epel-release
+RUN yum -y install \
+        alsa-lib-devel \
+        autoconf automake \
+        bzip2 bzip2-devel \
+        cmake3 \
+        diffutils \
+        expat-devel \
+        file \
+        fontconfig-devel \
+        freetype-devel \
+        fribidi-devel \
+        gcc \
+        gcc-c++ \
+        git \
+        gperf \
+        gsm-devel \
+        lcms2-devel \
+        libarchive-devel \
+        libcaca-devel \
+        libcdio-paranoia-devel \
+        libdrm-devel \
+        libdvdnav-devel \
+        libjpeg-turbo-devel \
+        libtool \
+        libva-devel \
+        libX11-devel \
+        libXScrnSaver-devel \
+        libXext-devel \
+        libXinerama-devel \
+        libXrandr-devel \
+        libXv-devel \
+        luajit-devel \
+        make \
+        mercurial \
+        mesa-libgbm-devel \
+        mesa-libwayland-egl-devel \
+        perl \
+        pkgconfig \
+        pulseaudio-libs-devel \
+        python3 \
+        rubberband-devel \
+        SDL2-devel \
+        tar \
+        uchardet-devel \
+        valgrind-devel \
+        wayland-devel \
+        which \
+        x11-devel \
+        xorg-x11-drv-intel \
+        xz \
+        zlib-devel
+
+RUN yum -y install \
+            $(yum search 'x.org x11' | grep -iE -- '-devel.x86_64 : ' | sed -r 's/ .*//' | sort | uniq | tr '\n' ' ')
+
+RUN yum -y install \
+        libva-vdpau-driver \
+        libva-devel \
+        libva \
+        xorg-x11-drv-intel \
+        opencl-headers ocl-icd-devel vulkan-loader-devel \
+        openssl openssl-devel \
+        gnutls gnutls-devel trousers-devel \
+        libidn2-devel libunistring-devel \
+    && sed -ri 's/-lcoregrind-amd64-linux -lvex-amd64-linux//' /usr/lib64/pkgconfig/valgrind.pc \
+    && ln -s /usr/bin/cmake3 /usr/bin/cmake

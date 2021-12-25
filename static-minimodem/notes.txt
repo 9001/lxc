@@ -1,0 +1,29 @@
+for iter in {1..100}; do ./minimodem --benchmarks; done | awk '/samples\/sec/' | awk '{printf "%d %s\n", (NR-1)%4, $2}' > /dev/shm/tf; for ofs in 25 50 75; do for tc in {0..3}; do grep -E "^$tc " /dev/shm/tf | cut -c3- | sort -n | awk 'NR=='$ofs' {printf "%10d ",$1}'; done; echo "$ofs%"; done 
+
+
+
+head -c 1111 /dev/zero | tr '\0' A | ./minimodem -tf /tmp/1.wav 1200
+head -c 1111 /dev/zero | tr '\0' A | ./minimodem -tf /tmp/1.raw 1200
+tail -c +45 1.wav | md5sum; md5sum < 1.raw
+# 911eb4ed2036f3d4962c7e4312b75b5e  -
+# 911eb4ed2036f3d4962c7e4312b75b5e  -
+# HEADER: head -c 44 1.wav
+
+
+
+for n in 111 112 1111 1112 11111 11112 111111 111112; do head -c $n /dev/zero | tr '\0' A | ./minimodem -tf /tmp/$n.wav 1200; head -c 44 </tmp/$n.wav >/tmp/$n.head; rm /tmp/$n.wav; done
+
+# 00000000  52 49 46 46 ## ## ## ##  57 41 56 45 66 6d 74 20  |RIFFDWL.WAVEfmt |
+# 00000010  10 00 00 00 01 00 01 00  80 bb 00 00 00 77 01 00  |.............w..|
+# 00000020  02 00 10 00 64 61 74 61  ## ## ## ##              |....data WL.|
+
+# first LE uint32 is entire file size
+# second LE uint32 is remaining bytes (first minus 0x24 / 36d)
+
+hexdump -C 11111.head | cut -c10-58 | sed -r 's/ +/\\x/g'
+
+
+
+wav_header() { printf '\x52\x49\x46\x46\x64\xff\xff\xff\x57\x41\x56\x45\x66\x6d\x74\x20\x10\x00\x00\x00\x01\x00\x01\x00\x80\xbb\x00\x00\x00\x77\x01\x00\x02\x00\x10\x00\x64\x61\x74\x61\x40\xff\xff\xff'; }
+
+rm /tmp/fifo.{raw,wav}; mkfifo /tmp/fifo.{raw,wav}; { wav_header; cat /tmp/fifo.raw; } > /tmp/fifo.wav & cat txt{,,,,,,,,,,,,,,,,,,,,,,,,,,,,,} | time ./minimodem -tf /tmp/fifo.raw 1200 & echo | time ./minimodem -rf /tmp/fifo.wav 1200 | pv > /dev/null

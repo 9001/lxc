@@ -1,0 +1,17 @@
+{
+  "CN": "*.foo.bar",
+  "hosts": [
+    "foo.bar",
+    "*.foo.bar"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "O": "Nandes",
+      "OU": "Snakeoil Server"
+    }
+  ]
+}

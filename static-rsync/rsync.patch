@@ -1,0 +1,34 @@
+diff -NarU3 rsync-3.1.3/clientname.c rsync-3.1.3-esxi/clientname.c
+--- rsync-3.1.3/clientname.c
++++ rsync-3.1.3-esxi/clientname.c
+@@ -170,7 +170,8 @@
+ 	if (getpeername(fd, (struct sockaddr *) ss, ss_len)) {
+ 		/* FIXME: Can we really not continue? */
+ 		rsyserr(FLOG, errno, "getpeername on fd%d failed", fd);
+-		exit_cleanup(RERR_SOCKETIO);
++		/* YES! WE! CAN! */
++		/* exit_cleanup(RERR_SOCKETIO); */
+ 	}
+ 
+ #ifdef INET6
+diff -NarU3 rsync-3.1.3/rsync.h rsync-3.1.3-esxi/rsync.h
+--- rsync-3.1.3/rsync.h
++++ rsync-3.1.3-esxi/rsync.h
+@@ -131,12 +131,12 @@
+ 
+ #define RSYNC_PORT 873
+ 
+-#define SPARSE_WRITE_SIZE (1024)
+-#define WRITE_SIZE (32*1024)
+-#define CHUNK_SIZE (32*1024)
++#define SPARSE_WRITE_SIZE (256*1024)
++#define WRITE_SIZE (256*1024)
++#define CHUNK_SIZE (256*1024)
+ #define MAX_MAP_SIZE (256*1024)
+-#define IO_BUFFER_SIZE (32*1024)
+-#define MAX_BLOCK_SIZE ((int32)1 << 17)
++#define IO_BUFFER_SIZE (256*1024)
++#define MAX_BLOCK_SIZE ((int32)1 << 24)
+ 
+ /* For compatibility with older rsyncs */
+ #define OLD_MAX_BLOCK_SIZE ((int32)1 << 29)

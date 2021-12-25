@@ -1,0 +1,295 @@
+# based on:
+# https://github.com/jrottenberg/ffmpeg/blob/master/docker-images/4.0/centos/Dockerfile
+# https://technick.net/guides/software/software_docker_build/
+# https://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+# TODO: vdpau ignores PKG_CONFIG_PATH and uses /tmp/pe-mpv/lib64/pkgconfig
+
+WORKDIR /tmp/pe-mpv/src
+
+ENV PKG_CONFIG_PATH=/tmp/pe-mpv/lib/pkgconfig:/tmp/pe-mpv/lib64/pkgconfig \
+    LD_LIBRARY_PATH=/tmp/pe-mpv/lib \
+    PREFIX=/tmp/pe-mpv \
+    PATH="/tmp/pe-mpv/src/ninja:/tmp/pe-mpv/bin:$PATH" \
+    CFLAGS="-I/tmp/pe-mpv/include" \
+    LDFLAGS="-L/tmp/pe-mpv/lib" \
+    MAKEFLAGS=replacemebro \
+    LC_ALL=C \
+    SHA_LAME=0844b9eadb4aacf8000444621451277de365041cc1d97b7f7a589da0b7a23899310afd4e4d81114b9912aa97832621d20588034715573d417b2923948c08634b \
+    VER_NASM=2.15.05 \
+    VER_YASM=1.3.0 \
+    VER_LAME=3.100 \
+    VER_OPUS=1.3.1 \
+    VER_LIBOGG=1.3.5 \
+    VER_LIBVORBIS=1.3.7 \
+    VER_LIBTHEORA=1.1.1 \
+    VER_LIBVPX=1.11.0 \
+    VER_LIBVDPAU=1.4 \
+    VER_VMAF=2.3.0 \
+    VER_VULKAN_HEADERS=1.2.198.0 \
+    VER_LIBVA=2.13.0 \
+    VER_INTEL_VAAPI_DRIVER=2.4.1 \
+    VER_SIXEL=1.8.6 \
+    VER_MESON=0.60.3
+
+ENV MESON=/tmp/pe-mpv/src/meson-${VER_MESON}/meson.py
+
+# prevent excessive cloning by downloading all source code first,
+# grouped by domain to minimize thrashing on service outage
+RUN curl -LO https://www.nasm.us/pub/nasm/releasebuilds/${VER_NASM}/nasm-${VER_NASM}.tar.bz2
+RUN curl -LO https://www.tortall.net/projects/yasm/releases/yasm-${VER_YASM}.tar.gz
+RUN git clone --depth 1 https://code.videolan.org/videolan/x264.git \
+    && git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git \
+    && git clone https://code.videolan.org/videolan/dav1d.git
+RUN git clone https://bitbucket.org/multicoreware/x265_git
+RUN curl -LO https://archive.mozilla.org/pub/opus/opus-${VER_OPUS}.tar.gz
+RUN curl -LO http://downloads.xiph.org/releases/ogg/libogg-${VER_LIBOGG}.tar.gz \
+    && curl -LO http://downloads.xiph.org/releases/vorbis/libvorbis-${VER_LIBVORBIS}.tar.gz
+RUN curl -LO https://ftp.osuosl.org/pub/xiph/releases/theora/libtheora-${VER_LIBTHEORA}.tar.gz
+#RUN git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git
+RUN git clone --depth 1 --branch v${VER_LIBVPX} https://chromium.googlesource.com/webm/libvpx.git \
+    && git clone https://aomedia.googlesource.com/aom
+#RUN curl -LO https://people.freedesktop.org/~aplattner/vdpau/libvdpau-${VER_LIBVDPAU}.tar.bz2
+RUN curl -LO https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/${VER_LIBVDPAU}/libvdpau-${VER_LIBVDPAU}.tar.gz \
+    && git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
+RUN curl -LO https://github.com/mesonbuild/meson/releases/download/${VER_MESON}/meson-${VER_MESON}.tar.gz \
+    && git clone git://github.com/ninja-build/ninja.git \
+    && curl -L https://github.com/KhronosGroup/Vulkan-Headers/archive/sdk-${VER_VULKAN_HEADERS}.tar.gz > vulkan-sdk.tar.gz \
+    && curl -LO https://github.com/intel/libva/releases/download/${VER_LIBVA}/libva-${VER_LIBVA}.tar.bz2 \
+    && curl -L https://github.com/Netflix/vmaf/archive/refs/tags/v${VER_VMAF}.tar.gz -o vmaf-${VER_VMAF}.tar.gz \
+    && curl -LO https://github.com/intel/intel-vaapi-driver/releases/download/${VER_INTEL_VAAPI_DRIVER}/intel-vaapi-driver-${VER_INTEL_VAAPI_DRIVER}.tar.bz2 \
+    && curl -LO https://github.com/saitoha/libsixel/releases/download/v$VER_SIXEL/libsixel-$VER_SIXEL.tar.gz \
+    && git clone https://github.com/mpv-player/mpv-build.git \
+    && cd mpv-build \
+    && git clone https://github.com/FFmpeg/FFmpeg.git ffmpeg \
+    && git clone https://github.com/libass/libass.git libass \
+    && git clone https://github.com/mpv-player/mpv.git mpv
+
+
+# illegal optionals
+#    git clone --depth 1 https://github.com/mstorsjo/fdk-aac && \
+
+
+# sourceforge is a glitchy mess
+RUN curl -LO https://downloads.sourceforge.net/project/lame/lame/${VER_LAME}/lame-${VER_LAME}.tar.gz \
+    && echo "$SHA_LAME  lame-${VER_LAME}.tar.gz" | sha512sum -c
+
+
+# mpv-build readme says to run `./rebuild $@',
+# opting to break this into separate steps:
+#   ./update
+#   ./clean
+#   ./build $MAKEFLAGS
+#
+# extra enable-flags to prevent losing features by accident:
+#   --enable-vdpau --enable-vaapi --enable-xv --enable-x11
+#
+# mpv config test in a docker shell:
+#   (export PKG_CONFIG_PATH="/tmp/pe-mpv/src/mpv-build/build_libs/lib/pkgconfig:/tmp/pe-mpv/lib/pkgconfig/:/tmp/pe-mpv/lib64/pkgconfig/"; cd mpv && ./waf configure --enable-dvdread --enable-dvdnav --enable-sdl2 --enable-vdpau --enable-xv --enable-asdf)
+
+RUN export LC_ALL=C \
+    && rm -f /usr/bin/python \
+    && ln -s /usr/bin/python3 /usr/bin/python \
+    && cd mpv-build \
+    && echo -e "\
+--enable-sdl2\n\
+--enable-vdpau\n\
+--enable-vaapi\n\
+--enable-xv\n\
+--enable-x11\n\
+" >> mpv_options \
+    && echo -e "\
+--pkg-config-flags=--static\n\
+--ld=g++\n\
+--extra-libs=-lpthread\n\
+--extra-libs=-lm\n\
+--enable-gpl\n\
+--enable-gnutls\n\
+--enable-libass\n\
+--enable-libfreetype\n\
+--enable-libfontconfig\n\
+--enable-libfribidi\n\
+--enable-libcaca\n\
+--enable-libcdio\n\
+--enable-libdrm\n\
+--enable-libgsm\n\
+--enable-libmp3lame\n\
+--enable-libopus\n\
+--enable-librubberband\n\
+--enable-libvorbis\n\
+--enable-libvpx\n\
+--enable-libx264\n\
+--enable-libx265\n\
+--enable-libaom\n\
+--enable-libsvtav1\n\
+--enable-libdav1d\n\
+--enable-ffplay\n\
+--enable-nvenc\n\
+--enable-vaapi\n\
+--enable-vdpau\n\
+--enable-opengl\n\
+--enable-opencl\n\
+--enable-libpulse\n\
+--enable-outdev=alsa\n\
+--enable-outdev=pulse\n\
+--enable-libtheora\n\
+" >> ffmpeg_options \
+    && ./update \
+    && ./clean
+
+
+# illegal ffmpeg_options:
+#   --enable-nonfree\n\
+#   --enable-libfdk-aac\n\
+#   --enable-openssl\n\
+# legal alternatives:
+#   --enable-gnutls (must be set otherwise mpv-build may nonfree)
+
+
+# create full source archive for convenience
+#    for f in *.xz; do xz -d "$f"; done && \
+RUN for f in *.bz2; do bzip2 -d "$f"; done \
+    && for f in *.gz; do gzip -d "$f"; done \
+    && find -type f -or -type l | \
+    grep -vE '/\.(hg/|git)' | \
+    LC_ALL=C sort | \
+    tar -c --numeric-owner --owner=1000 --group=1000 \
+        -T- > /tmp/pe-mpv/src-full.tar
+
+
+# create GPL source archive
+RUN tar -c --numeric-owner --owner=1000 --group=1000 \
+        --exclude=.hg \
+        --exclude=.git \
+        --exclude=.github \
+        --exclude=test \
+        --exclude=tests \
+        --exclude=DOCS \
+        --exclude=TOOLS \
+        x26* mpv-build | \
+    xz -cze9T0 > /tmp/pe-mpv/src-gpl.txz
+
+
+RUN tar xf nasm-${VER_NASM}.tar \
+    && cd nasm-${VER_NASM} \
+    && ./autogen.sh \
+    && ./configure --prefix="/tmp/pe-mpv" --bindir="/tmp/pe-mpv/bin" \
+    && make \
+    && make install
+
+RUN tar xf yasm-${VER_YASM}.tar \
+    && cd yasm-${VER_YASM} \
+    && ./configure --prefix="/tmp/pe-mpv" --bindir="/tmp/pe-mpv/bin" \
+    && make \
+    && make install
+
+RUN cd x264 \
+    && ./configure --prefix="/tmp/pe-mpv" --bindir="/tmp/pe-mpv/bin" --enable-static \
+    && make \
+    && make install
+
+#RUN cd fdk-aac && \
+#    autoreconf -fiv && \
+#    ./configure --prefix="/tmp/pe-mpv" --disable-shared && \
+#    make && \
+#    make install
+
+RUN tar xf lame-${VER_LAME}.tar \
+    && cd lame-${VER_LAME} \
+    && ./configure --prefix="/tmp/pe-mpv" --bindir="/tmp/pe-mpv/bin" --disable-shared --enable-nasm \
+    && make \
+    && make install
+
+RUN tar xf opus-${VER_OPUS}.tar \
+    && cd opus-${VER_OPUS} \
+    && ./configure --prefix="/tmp/pe-mpv" --disable-shared \
+    && make \
+    && make install
+
+RUN tar xf libogg-${VER_LIBOGG}.tar \
+    && cd libogg-${VER_LIBOGG} \
+    && ./configure --prefix="/tmp/pe-mpv" --disable-shared \
+    && make \
+    && make install
+
+RUN tar xf libvorbis-${VER_LIBVORBIS}.tar \
+    && cd libvorbis-${VER_LIBVORBIS} \
+    && ./configure --prefix="/tmp/pe-mpv" --with-ogg="/tmp/pe-mpv" --disable-shared \
+    && make \
+    && make install
+
+RUN tar xf libtheora-${VER_LIBTHEORA}.tar && \
+    cd libtheora-${VER_LIBTHEORA} && \
+    ./configure --prefix="/tmp/pe-mpv" --with-ogg="/tmp/pe-mpv" --disable-shared --disable-examples && \
+    make && \
+    make install
+
+RUN cd libvpx \
+    && ./configure --prefix="/tmp/pe-mpv" --disable-shared --disable-examples --disable-unit-tests --enable-vp9-highbitdepth --as=yasm \
+    && make \
+    && make install
+
+RUN tar -xf libva-${VER_LIBVA}.tar \
+    && cd libva-${VER_LIBVA} \
+    && ./configure --prefix="/tmp/pe-mpv" --enable-drm --enable-x11 --with-drivers-path=/tmp/pe-mpv/dri \
+    && make \
+    && make install
+
+RUN tar -xf intel-vaapi-driver-${VER_INTEL_VAAPI_DRIVER}.tar \
+    && cd intel-vaapi-driver-${VER_INTEL_VAAPI_DRIVER} \
+    && ./configure --prefix="/tmp/pe-mpv" --enable-drm --enable-x11 \
+    && make \
+    && make install \
+    && cp -pvR /tmp/pe-mpv/dri /tmp/pe-mpv/lib/dri
+
+RUN cd nv-codec-headers \
+    && make \
+    && make install PREFIX=/tmp/pe-mpv
+
+RUN cd ninja \
+    && git checkout release \
+    && ./configure.py --bootstrap
+
+RUN tar -xf meson-${VER_MESON}.tar \
+    && tar -xf libvdpau-${VER_LIBVDPAU}.tar \
+    && cd libvdpau-${VER_LIBVDPAU} \
+    && $MESON --prefix /tmp/pe-mpv -Dlibdir=/tmp/pe-mpv/lib b \
+    && ninja -C b install
+
+RUN tar -xf vulkan-sdk.tar \
+    && cd Vulkan-Headers-sdk-${VER_VULKAN_HEADERS} \
+    && mkdir build \
+    && cd build \
+    && cmake -DCMAKE_INSTALL_PREFIX=/tmp/pe-mpv .. \
+    && make \
+    && make install
+
+RUN cd x265_git/build/linux \
+    && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/tmp/pe-mpv" -DENABLE_SHARED:bool=off -DCMAKE_ASM_NASM_FLAGS=-w-macro-params-legacy ../../source \
+    && make \
+    && make install
+
+# needs a LOT of ram, -j8 dies with 12gb
+RUN mkdir aom/b \
+    && cd aom/b \
+    && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/tmp/pe-mpv" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. \
+    && make $(awk '!/^MemAvailable:/{next} $2<16*1024*1024{j=4} $2<8*1024*1024{j=2} j{printf "-j%d\n", j;exit 1}' /proc/meminfo) \
+    && make install
+
+RUN mkdir dav1d/b \
+    && cd dav1d/b \
+    && $MESON setup -Denable_tools=false -Denable_tests=false --default-library=static .. --prefix "/tmp/pe-mpv" --libdir="/tmp/pe-mpv/lib" \
+    && ninja \
+    && ninja install
+
+RUN mkdir SVT-AV1/b \
+    && cd SVT-AV1/b \
+    && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/tmp/pe-mpv" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. \
+    && make \
+    && make install
+
+RUN tar -xf libsixel-$VER_SIXEL.tar \
+    && cd sixel-$VER_SIXEL \
+    && ./configure --prefix=/tmp/pe-mpv \
+    && make \
+    && make install

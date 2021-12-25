@@ -1,0 +1,71 @@
+FROM debian:stable-slim
+MAINTAINER ed <build-mpv@ocv.me>
+
+SHELL ["/bin/bash","-c"]
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update
+
+RUN apt-get -qq install \
+        autoconf automake \
+        build-essential \
+        bzip2 \
+        cmake \
+        curl \
+        diffutils \
+        file \
+        git-core \
+        libarchive-dev \
+        libasound2-dev \
+        libcaca-dev \
+        libcdio-paranoia-dev \
+        libdrm-dev \
+        libdvdnav-dev \
+        libegl-dev \
+        libexpat1-dev \
+        libfontconfig-dev \
+        libfreetype6-dev \
+        libfribidi-dev \
+        libgbm-dev \
+        libgnutls28-dev \
+        libgsm1-dev \
+        libharfbuzz-dev \
+        libjpeg62-turbo-dev \
+        liblcms2-dev \
+        libluajit-5.1-dev \
+        libmp3lame-dev \
+        libpulse-dev \
+        librubberband-dev \
+        libsdl2-dev \
+        libtool \
+        libunistring-dev \
+        libuchardet-dev \
+        libva-dev \
+        libvdpau-dev \
+        libvorbis-dev \
+        libvulkan-dev \
+        libwayland-dev \
+        libx11-dev \
+        libxcb1-dev \
+        libxcb-shm0-dev \
+        libxcb-xfixes0-dev \
+        libxext-dev \
+        libxinerama-dev \
+        libxrandr-dev \
+        libxv-dev \
+        mercurial \
+        mesa-common-dev \
+        mesa-opencl-icd \
+        ocl-icd-opencl-dev \
+        perl \
+        pkg-config \
+        python3 \
+        tar \
+        texinfo \
+        wget \
+        x11proto-dev \
+        xserver-xorg-video-intel \
+        xz-utils \
+        yasm \
+        zlib1g-dev

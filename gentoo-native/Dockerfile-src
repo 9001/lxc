@@ -1,0 +1,51 @@
+FROM gentoo/stage3:amd64-nomultilib
+MAINTAINER ed <gentoo-native-ffmpeg@ocv.me>
+
+# emerge --info | grep -i bindist  # no output
+
+RUN emerge-webrsync
+
+# COMMON_FLAGS="-O2 -pipe"
+RUN sed -ri 's/^(COMMON_FLAGS=").*/\1-O3 -pipe -march=native"/' /etc/portage/make.conf \
+    && echo 'MAKEOPTS="-j4"' >> /etc/portage/make.conf \
+    && echo 'ACCEPT_LICENSE="*"' >> /etc/portage/make.conf \
+    && echo 'USE="static encode fontconfig iconv libass lzma mp3 opus static-libs svg theora threads truetype vorbis wavpack webp x264 xvid zlib"' >> /etc/portage/make.conf \
+    && echo 'net-misc/openssh -pie -pam' > /etc/portage/package.use/openssh \
+    && emerge --color y -NuDvf @world
+
+# TODO wtf is this
+RUN echo "media-video/ffmpeg ~amd64 dav1d fdk fribidi flite gpl gmp libtesseract libxml2 openssl rubberband srt vidstab vpx x265 zimb zvbi" > /etc/portage/package.use/ffmpeg \
+    && echo "media-libs/dav1d ~amd64" >> /etc/portage/package.use/ffmpeg \
+    && emerge --color y -vf ffmpeg
+
+RUN sed -ri 's/^USE=".*/USE="static encode fontconfig iconv libass lzma mp3 opus static-libs svg theora threads truetype vorbis wavpack x264 xvid zlib png jpeg gif"/' /etc/portage/make.conf \
+    && echo "media-video/ffmpeg ~amd64" > /etc/portage/package.use/ffmpeg \
+    && echo "media-libs/dav1d ~amd64" >> /etc/portage/package.use/ffmpeg \
+    && echo "media-video/ffmpeg dav1d fdk fribidi flite gpl gmp libtesseract libxml2 openssl rubberband srt vidstab vpx x265 zimb zvbi" >> /etc/portage/package.use/ffmpeg \
+    && emerge --color y -vf ffmpeg
+
+# TODO: very first step after rsync, with env USE=bindist
+RUN emerge --color y -v cpuid2cpuflags
+
+# fix typo above
+RUN sed -ri 's/ zimb / zimg /' /etc/portage/package.use/ffmpeg \
+    && emerge --color y -vf ffmpeg
+
+## workaround, merge with cpuid2cpuflags:
+## checking whether we are cross compiling...  * /var/tmp/portage/sys-apps/sandbox-2.13/work/sandbox-2.13/libsandbox/trace.c:do_peekstr():129: failure (Operation not permitted):
+## * ISE:do_peekstr:process_vm_readv(21440, 0x00007fff6565beb0{0x00007f43e17bf010, 0xffa}, 1, 0x00007fff6565bec0{0x0000000000482006, 0xffa}, 1, 0) failed: Operation not permitted
+#RUN echo "sys-apps/sandbox ~amd64" > /etc/portage/package.accept_keywords \
+#    && echo "media-video/ffmpeg ~amd64" >> /etc/portage/package.accept_keywords \
+#    && echo "media-libs/dav1d ~amd64" >> /etc/portage/package.accept_keywords \
+#    && emerge --color y -v sandbox
+
+# more stuff to merge
+RUN echo "media-video/ffmpeg ~amd64" >> /etc/portage/package.accept_keywords \
+    && echo "media-libs/dav1d ~amd64" >> /etc/portage/package.accept_keywords \
+    && echo "app-text/tessdata_fast ~amd64" >> /etc/portage/package.accept_keywords \
+    && echo "app-text/tesseract ~amd64" >> /etc/portage/package.accept_keywords
+
+RUN --security=insecure \
+    sed -ri '/^CPU_FLAGS_X86=/d' /etc/portage/make.conf \
+    && cpuid2cpuflags | sed -r 's/: /="/;s/$/"/' >> /etc/portage/make.conf \
+    && emerge --color y -NuDvf @world ffmpeg 

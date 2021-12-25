@@ -1,0 +1,66 @@
+diff -NarU3 ext4magic-0.3.2-orig/src/ext2fsP.h ext4magic-0.3.2/src/ext2fsP.h
+--- ext4magic-0.3.2-orig/src/ext2fsP.h
++++ ext4magic-0.3.2/src/ext2fsP.h
+@@ -9,6 +9,7 @@
+  * %End-Header%
+  */
+ 
++#include <sys/types.h>
+ #include <ext2fs/ext2fs.h>
+ 
+ /*
+diff -NarU3 ext4magic-0.3.2-orig/src/hard_link_stack.h ext4magic-0.3.2/src/hard_link_stack.h
+--- ext4magic-0.3.2-orig/src/hard_link_stack.h
++++ ext4magic-0.3.2/src/hard_link_stack.h
+@@ -20,6 +20,7 @@
+ 
+ #ifndef HARD_LINKSTACK_H
+ #define HARD_LINKSTACK_H
++#include <sys/types.h>
+ #include <ext2fs/ext2fs.h>
+ 
+ struct link_entry{
+diff -NarU3 ext4magic-0.3.2-orig/src/inode.h ext4magic-0.3.2/src/inode.h
+--- ext4magic-0.3.2-orig/src/inode.h
++++ ext4magic-0.3.2/src/inode.h
+@@ -19,6 +19,7 @@
+ #define INODE_H
+ 
+ 
++#include <sys/types.h>
+ #include <ext2fs/ext2fs.h>
+ #include "util.h"
+ #include "ext4magic.h"
+diff -NarU3 ext4magic-0.3.2-orig/src/lookup_local.c ext4magic-0.3.2/src/lookup_local.c
+--- ext4magic-0.3.2-orig/src/lookup_local.c
++++ ext4magic-0.3.2/src/lookup_local.c
+@@ -23,6 +23,7 @@
+ #include <unistd.h>
+ #endif
+ 
++#include <sys/types.h>
+ #include <ext2fs/ext2fs.h>
+ //#include <ext2fs/ext2_io.h>
+ #include "ext2fsP.h"
+diff -NarU3 ext4magic-0.3.2-orig/src/ring_buf.h ext4magic-0.3.2/src/ring_buf.h
+--- ext4magic-0.3.2-orig/src/ring_buf.h
++++ ext4magic-0.3.2/src/ring_buf.h
+@@ -21,6 +21,7 @@
+ #define RING_BUF_H
+ 
+ /* ext3/4 libraries */
++#include <sys/types.h>
+ #include <ext2fs/ext2fs.h>
+ 
+ 
+diff -NarU3 ext4magic-0.3.2-orig/src/util.c ext4magic-0.3.2/src/util.c
+--- ext4magic-0.3.2-orig/src/util.c
++++ ext4magic-0.3.2/src/util.c
+@@ -23,6 +23,7 @@
+ #include <time.h> 
+ 
+ /* ext3/4 libraries */
++#include <sys/types.h>
+ #include <ext2fs/ext2fs.h>
+ #include <e2p/e2p.h>
+ 

@@ -1,0 +1,47 @@
+diff -wNarU3 musl-1.2.2/src/process/_Fork.c musl-1.2.2-esxi/src/process/_Fork.c
+--- musl-1.2.2/src/process/_Fork.c
++++ musl-1.2.2-esxi/src/process/_Fork.c
+@@ -1,5 +1,7 @@
++#define _GNU_SOURCE
+ #include <unistd.h>
+ #include <signal.h>
++#include <sched.h>
+ #include "syscall.h"
+ #include "libc.h"
+ #include "lock.h"
+@@ -16,10 +18,11 @@
+ 	__block_all_sigs(&set);
+ 	__aio_atfork(-1);
+ 	LOCK(__abort_lock);
+-#ifdef SYS_fork
++#ifdef SYS_fork_nope_avi
+ 	ret = __syscall(SYS_fork);
+ #else
+-	ret = __syscall(SYS_clone, SIGCHLD, 0);
++	pid_t tid = __syscall(SYS_gettid);
++	ret = __syscall(SYS_clone, SIGCHLD|CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID, 0, 0, tid);
+ #endif
+ 	if (!ret) {
+ 		pthread_t self = __pthread_self();
+diff -wNarU3 musl-1.2.2/src/process/vfork.c musl-1.2.2-esxi/src/process/vfork.c
+--- musl-1.2.2/src/process/vfork.c
++++ musl-1.2.2-esxi/src/process/vfork.c
+@@ -1,14 +1,16 @@
+ #define _GNU_SOURCE
+ #include <unistd.h>
+ #include <signal.h>
++#include <sched.h>
+ #include "syscall.h"
+ 
+ pid_t vfork(void)
+ {
+ 	/* vfork syscall cannot be made from C code */
+-#ifdef SYS_fork
++#ifdef SYS_fork_nope_avi
+ 	return syscall(SYS_fork);
+ #else
+-	return syscall(SYS_clone, SIGCHLD, 0);
++	pid_t tid = __syscall(SYS_gettid);
++	return syscall(SYS_clone, SIGCHLD|CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID, 0, 0, tid);
+ #endif
+ }

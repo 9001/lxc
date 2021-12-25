@@ -1,0 +1,27 @@
+RUN printf '%s\n' \
+        /tmp/pe-mpv/src/mpv-build/mpv/build/mpv \
+        /tmp/pe-mpv/src/mpv-build/build_libs/bin/{ffmpeg,ffprobe,ffplay} \
+        /tmp/pe-mpv/bin/{lame,x264,x265} \
+        /tmp/pe-mpv/lib/*.so.* \
+        /usr/lib64/lib{uchardet,archive,rubberband,fribidi,fftw3,Xss,caca}.so.* \
+        /usr/lib64/libcdio{,_cdda,_paranoia}.so.* \
+        /usr/lib64/lib{luajit-,SDL2-2}*.so.* \
+        /lib64/lib{crypto,ssl}.so.* \
+        | grep -vE '\.so\.[0-9]+\.[0-9\.]+[a-z]?$' \
+        | while IFS= read -r x; do cp -pv "$x" /rls; done \
+    && cp -pvR /tmp/pe-mpv/lib/{dri,vdpau} /rls
+#        /usr/lib64/lib{va-drm,va-x11,va,uchardet,archive,rubberband,fribidi,fftw3,Xss,caca}.so.* \
+
+# additionals for c8min zerodep sfx
+RUN printf '%s\n' \
+        /usr/lib64/lib{Xrandr,Xinerama,harfbuzz,fontconfig,lcms2,jpeg,gbm,Xext,X11,Xau,Xtst,Xi,X11-xcb,Xv}.so.* \
+        /usr/lib64/lib{GLU,glut,GL,EGL,GLX,GLdispatch,drm,asound,xcb,xcb-shm,xcb-xfixes,xcb-render,xcb-shape}.so.* \
+        /usr/lib64/lib{Xfixes,wayland-server,graphite2,pulse,sndfile,asyncns,samplerate,ICE,SM,gsm}.so.* \
+        /usr/lib64/lib{Xrender,Xxf86vm,FLAC,ogg,vorbis,vorbisenc,tspi,hogweed,nettle,ffi,freetype}.so.* \
+        /usr/lib64/libOpenCL.so.* \
+        | grep -vE '\.so\.[0-9]+\.[0-9\.]+[a-z]?$' \
+        | while IFS= read -r x; do cp -pv "$x" /rls; done \
+    && cp -pv /usr/lib64/pulseaudio/libpulsecommon-* /rls
+
+# while true; do ncat -l -p 4321 | ssh root@127.0.0.1 -p 8022 'tar -xvC /tmp/pe-mpv/; ~/mpv'; sleep 0.1; done 
+# tar -hcC /usr/lib64/pulseaudio/ libpulsecommon-11.1.so > /dev/tcp/172.17.0.1/4321

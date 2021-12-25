@@ -1,0 +1,28 @@
+# ios and macos requires validity < 825 days; 19800 h
+#
+# DANGEROUS CLEANUP COMMANDS:
+#   find -type f -not \( -iname '*.json' -or -iname '*.txt' \) -delete
+
+https://github.com/jason-riddle/generating-certs/wiki/Generating-a-Root-CA,-Server,-and-Client-Certs-using-CFSSL
+
+-rw-r--r-- 1 ed ed      156 ca-csr.json
+-rwxr-xr-x 1 ed ed 18590304 cfssl*
+-rwxr-xr-x 1 ed ed 12909408 cfssljson*
+
+./cfssl gencert -initca ca-csr.json | ./cfssljson -bare ca
+
+-rw-r--r-- 1 ed ed      948 ca.csr
+-rw-r--r-- 1 ed ed      156 ca-csr.json
+-rw------- 1 ed ed     1679 ca-key.pem
+-rw-r--r-- 1 ed ed     1204 ca.pem
+-rwxr-xr-x 1 ed ed 18590304 cfssl*
+-rwxr-xr-x 1 ed ed 12909408 cfssljson*
+
+rm ca.csr
+vim ca-config.json
+vim foobox-csr.json
+
+./cfssl gencert \
+  -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json \
+  -profile=server foobox-csr.json |
+  ./cfssljson -bare foobox

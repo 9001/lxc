@@ -1,0 +1,29 @@
+RUN printf '%s\n' \
+        /tmp/pe-mpv/src/mpv-build/mpv/build/mpv \
+        /tmp/pe-mpv/src/mpv-build/build_libs/bin/{ffmpeg,ffprobe,ffplay} \
+        /tmp/pe-mpv/bin/{lame,x264,x265} \
+        /tmp/pe-mpv/lib/*.so.* \
+        /usr/lib/x86_64-linux-gnu/lib{uchardet,archive,rubberband,fribidi,fftw3,Xss,caca}.so.* \
+        /usr/lib/x86_64-linux-gnu/libcdio{,_cdda,_paranoia}.so.* \
+        /usr/lib/x86_64-linux-gnu/lib{luajit-,SDL2-2}*.so.* \
+        | grep -vE '\.so\.[0-9]+\.[0-9\.]+[a-z]?$' \
+        | while IFS= read -r x; do cp -pv "$x" /rls; done \
+    && cp -pvR /tmp/pe-mpv/lib/{dri,vdpau} /rls
+
+RUN printf '%s\n' \
+        /usr/lib/x86_64-linux-gnu/lib{Xrandr,Xinerama,harfbuzz,fontconfig,lcms2,jpeg,gbm,Xext,X11,Xau,Xtst,Xi,X11-xcb,Xv}.so.* \
+        /usr/lib/x86_64-linux-gnu/lib{GLU,GL,EGL,GLX,GLdispatch,drm,asound,xcb,xcb-shm,xcb-xfixes,xcb-render,xcb-shape}.so.* \
+        /usr/lib/x86_64-linux-gnu/lib{Xfixes,wayland-server,graphite2,pulse,sndfile,asyncns,samplerate,ICE,SM,gsm}.so.* \
+        /usr/lib/x86_64-linux-gnu/lib{Xrender,Xxf86vm,FLAC,ogg,vorbis,vorbisenc,hogweed,nettle,ffi,freetype}.so.* \
+        /usr/lib/x86_64-linux-gnu/lib{OpenCL,wrap,nsl}.so.* \
+        | grep -vE '\.so\.[0-9]+\.[0-9\.]+[a-z]?$' \
+        | while IFS= read -r x; do cp -pv "$x" /rls; done \
+    && cp -pv \
+        /usr/lib/x86_64-linux-gnu/lib{sndio,crypto,ssl}.so.* \
+        /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-* \
+        /rls
+
+#mv /tmp/pe-mpv/lib/x86_64-linux-gnu/pkgconfig/* /tmp/pe-mpv/lib/pkgconfig/ \
+#    && rmdir /tmp/pe-mpv/lib/x86_64-linux-gnu/pkgconfig \
+#    && mv /tmp/pe-mpv/lib/x86_64-linux-gnu/* /tmp/pe-mpv/lib/ \
+#    && 
