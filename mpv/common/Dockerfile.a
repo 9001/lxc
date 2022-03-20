@@ -53,7 +53,7 @@ RUN git clone --depth 1 --branch v${VER_LIBVPX} https://chromium.googlesource.co
 RUN curl -LO https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/${VER_LIBVDPAU}/libvdpau-${VER_LIBVDPAU}.tar.gz \
     && git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git
 RUN curl -LO https://github.com/mesonbuild/meson/releases/download/${VER_MESON}/meson-${VER_MESON}.tar.gz \
-    && git clone git://github.com/ninja-build/ninja.git \
+    && git clone https://github.com/ninja-build/ninja.git \
     && curl -L https://github.com/KhronosGroup/Vulkan-Headers/archive/sdk-${VER_VULKAN_HEADERS}.tar.gz > vulkan-sdk.tar.gz \
     && curl -LO https://github.com/intel/libva/releases/download/${VER_LIBVA}/libva-${VER_LIBVA}.tar.bz2 \
     && curl -L https://github.com/Netflix/vmaf/archive/refs/tags/v${VER_VMAF}.tar.gz -o vmaf-${VER_VMAF}.tar.gz \

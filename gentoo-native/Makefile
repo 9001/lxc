@@ -22,7 +22,7 @@ bin:
 	docker buildx build --allow security.insecure -t gentoo-native-ffmpeg-bin - < Dockerfile-bin
 
 # export DOCKER_BUILDKIT=1
-# docker build --platform=local -o . git://github.com/docker/buildx
+# docker build --platform=local -o . https://github.com/docker/buildx
 # mkdir -p ~/.docker/cli-plugins/
 # mv buildx ~/.docker/cli-plugins/docker-buildx
 
