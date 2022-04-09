@@ -11,7 +11,7 @@ img:
 	rm -rf rls
 	mkdir rls
 	echo "cp -pvR /rls/* /2host" | \
-	docker run --rm -iv "${PWD}/rls:/2host" mpv:latest
+	docker run --user 0 --rm -iv "${PWD}/rls:/2host":Z mpv:latest
 
 pkg:
 	cp -pvL Makefile Dockerfile ../common/checkver.sh sfx.sh rls/src/
