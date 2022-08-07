@@ -17,7 +17,7 @@ RUN printf '%s\n' \
         /usr/lib64/lib{Xrandr,Xinerama,harfbuzz,fontconfig,lcms2,jpeg,gbm,Xext,X11,Xau,Xtst,Xi,X11-xcb,Xv}.so.* \
         /usr/lib64/lib{GLU,glut,GL,EGL,GLX,GLdispatch,drm,asound,xcb,xcb-shm,xcb-xfixes,xcb-render,xcb-shape}.so.* \
         /usr/lib64/lib{Xfixes,wayland-server,graphite2,pulse,sndfile,asyncns,samplerate,ICE,SM,gsm}.so.* \
-        /usr/lib64/lib{Xrender,Xxf86vm,FLAC,ogg,vorbis,vorbisenc,tspi,hogweed,nettle,ffi,freetype}.so.* \
+        /usr/lib64/lib{Xrender,Xpresent,Xxf86vm,FLAC,ogg,vorbis,vorbisenc,tspi,hogweed,nettle,ffi,freetype}.so.* \
         /usr/lib64/libOpenCL.so.* \
         | grep -vE '\.so\.[0-9]+\.[0-9\.]+[a-z]?$' \
         | while IFS= read -r x; do cp -pv "$x" /rls; done \

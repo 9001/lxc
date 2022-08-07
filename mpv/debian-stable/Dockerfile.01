@@ -52,6 +52,7 @@ RUN apt-get -qq install \
         libxcb-xfixes0-dev \
         libxext-dev \
         libxinerama-dev \
+        libxpresent-dev \
         libxrandr-dev \
         libxv-dev \
         mercurial \

@@ -1,4 +1,8 @@
 # centos7 / gcc 4.8.5 cannot do c11 atomics;
-# this workaround is scheduled for removal in a future version of mpv
+# this workaround is scheduled for removal in a future version of mpv,
+# also downgrade to final non-xpresent ver
 RUN cd mpv-build \
-    && printf '%s\n' --disable-stdatomic >> mpv_options
+    && printf '%s\n' --disable-stdatomic >> mpv_options \
+    && sed -ri '/enable-libaom/d' ffmpeg_options \
+    && cd mpv \
+    && git checkout ceade3493045898a30f0da1bbb639552447ffcdf

@@ -1,0 +1,3 @@
+# debian-11 libdrm doesn't have drmIsKMS; downgrade
+RUN cd mpv-build/mpv \
+    && git checkout 8b1f9787125f2eaa85912f5143c470a4261d084a

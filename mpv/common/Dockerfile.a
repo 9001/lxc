@@ -30,7 +30,7 @@ ENV PKG_CONFIG_PATH=/tmp/pe-mpv/lib/pkgconfig:/tmp/pe-mpv/lib64/pkgconfig \
     VER_LIBVA=2.14.0 \
     VER_INTEL_VAAPI_DRIVER=2.4.1 \
     VER_SIXEL=1.8.6 \
-    VER_MESON=0.62.1
+    VER_MESON=0.61.5
 
 ENV MESON=/tmp/pe-mpv/src/meson-${VER_MESON}/meson.py
 
@@ -268,13 +268,6 @@ RUN tar -xf vulkan-sdk.tar \
 RUN cd x265_git/build/linux \
     && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/tmp/pe-mpv" -DENABLE_SHARED:bool=off -DCMAKE_ASM_NASM_FLAGS=-w-macro-params-legacy ../../source \
     && make \
-    && make install
-
-# needs a LOT of ram, -j8 dies with 12gb
-RUN mkdir aom/b \
-    && cd aom/b \
-    && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/tmp/pe-mpv" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. \
-    && make $(awk '!/^MemAvailable:/{next} $2<16*1024*1024{j=4} $2<8*1024*1024{j=2} j{printf "-j%d\n", j;exit 1}' /proc/meminfo) \
     && make install
 
 RUN mkdir dav1d/b \

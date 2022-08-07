@@ -42,6 +42,7 @@ RUN yum config-manager --set-enabled powertools \
         libXScrnSaver-devel \
         libXext-devel \
         libXinerama-devel \
+        libXpresent-devel \
         libXrandr-devel \
         libXv-devel \
         luajit-devel \
