@@ -1,0 +1,15 @@
+allow intentional tampering in nvram dumps
+
+diff --git a/ShellPkg/Library/UefiShellDebug1CommandsLib/DmpStore.c b/ShellPkg/Library/UefiShellDebug1CommandsLib/DmpStore.c
+index 975db0a..878ee59 100644
+--- a/ShellPkg/Library/UefiShellDebug1CommandsLib/DmpStore.c
++++ b/ShellPkg/Library/UefiShellDebug1CommandsLib/DmpStore.c
+@@ -213,7 +213,7 @@ LoadVariablesFromFile (
+            BufferSize,
+            &Crc32
+            );
+-    if (Crc32 != *(UINT32 *)(Buffer + BufferSize)) {
++    if (0) {
+       FreePool (Buffer);
+       ShellStatus = SHELL_VOLUME_CORRUPTED;
+       break;

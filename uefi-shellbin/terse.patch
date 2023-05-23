@@ -1,0 +1,11 @@
+diff --git a/ShellPkg/Application/Shell/Shell.uni b/ShellPkg/Application/Shell/Shell.uni
+index 7dd0072..cbbb0ed 100644
+--- a/ShellPkg/Application/Shell/Shell.uni
++++ b/ShellPkg/Application/Shell/Shell.uni
+@@ -44,4 +44,4 @@
+ 
+-#string STR_VER_OUTPUT_MAIN_SHELL     #language en-US "UEFI %s Shell v%d.%d\r\n"
+-#string STR_VER_OUTPUT_MAIN_SUPPLIER  #language en-US "%s\r\n"
++#string STR_VER_OUTPUT_MAIN_SHELL     #language en-US "UEFI %s Shell v%d.%d"
++#string STR_VER_OUTPUT_MAIN_SUPPLIER  #language en-US "%s"
+ #string STR_VER_OUTPUT_MAIN_UEFI      #language en-US "UEFI v%d.%02d (%s, 0x%08x)\r\n"

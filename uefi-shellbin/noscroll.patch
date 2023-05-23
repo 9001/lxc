@@ -1,0 +1,30 @@
+quick hack to replace scrolling with overwrite/line-rotation;
+good for slow consoles,
+but breaks hexedit and pgup/pgdn
+
+diff --git a/ShellPkg/Application/Shell/ConsoleLogger.c b/ShellPkg/Application/Shell/ConsoleLogger.c
+index abef0a6..8e5c042 100644
+--- a/ShellPkg/Application/Shell/ConsoleLogger.c
++++ b/ShellPkg/Application/Shell/ConsoleLogger.c
+@@ -654,6 +654,12 @@ ConsoleLoggerDoPageBreak (
+   SHELL_PROMPT_RESPONSE  *Resp;
+   EFI_STATUS             Status;
+ 
++  Status = ShellInfoObject.ConsoleInfo->OldConOut->ClearScreen (ShellInfoObject.ConsoleInfo->OldConOut);
++  if (!EFI_ERROR (Status)) {
++    ShellInfoObject.ConsoleInfo->RowCounter = 0;
++    return (EFI_SUCCESS);
++  }
++
+   Resp = NULL;
+   ASSERT (ShellInfoObject.PageBreakEnabled);
+   ShellInfoObject.PageBreakEnabled = FALSE;
+@@ -822,7 +828,7 @@ ConsoleLoggerPrintWithPageBreak (
+     //
+     // check if that was the last printable row.  If yes handle PageBreak mode
+     //
+-    if ((ConsoleInfo->RowsPerScreen) -1 == ShellInfoObject.ConsoleInfo->RowCounter) {
++    if (ConsoleInfo->OurConOut.Mode->CursorRow % ConsoleInfo->RowsPerScreen == ConsoleInfo->RowsPerScreen -1) {
+       if (EFI_ERROR (ConsoleLoggerDoPageBreak ())) {
+         //
+         // We got an error which means 'break' and halt the printing
