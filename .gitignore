@@ -3,3 +3,4 @@
 **/rls/
 **/rls-*/
 mpv/*/Dockerfile
+bin/

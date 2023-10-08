@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t build-cfssl .
 	
 	rm -rf rls*
 	
 	echo tar -cC / rls-linux-x64 rls-windows-x86 | \
-	docker run --rm -i build-cfssl:latest | \
+	docker run --rm --log-driver=none -i build-cfssl:latest | \
 	tar -xv
 	
 sh:

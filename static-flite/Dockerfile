@@ -1,16 +1,20 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV VER="2.1" \
-    SHA="e9ef9ca4b6920178634d94bbe6e21a8b0ec471b010b07e6cc961ed2d120acb944c8e1d268fe26188f7dfe43fb7bd4bdff7fa53b2d2f12029d37e08d0316620d2"
+WORKDIR /z
 
-RUN wget http://www.festvox.org/flite/packed/flite-$VER/flite-$VER-release.tar.bz2 \
-    && echo "$SHA  flite-$VER-release.tar.bz2" | sha512sum -c \
+ENV VER="2.2" \
+    SHA="1ca2f4145651490ef8405fdb830a3b42e885020a7603d965f6a5581b01bed41047d396b38c2ceab138fc0b28d28078db17acd2b5a84c6444cb99d65c581afa72"
+
+RUN wget https://github.com/festvox/flite/archive/v$VER.tar.gz \
+    && sha512sum v$VER.tar.gz \
+    && echo "$SHA  v$VER.tar.gz" | sha512sum -c \
+    && wget http://festvox.org/flite/packed/flite-2.1/voices/cmu_us_slt.flitevox \
     && apk add --no-cache \
         gcc g++ musl-dev make automake autoconf m4 libtool bzip2
 
-RUN tar -xvf flite-$VER-release.tar.bz2 \
-    && cd flite-$VER-release \
+RUN tar -xvf v$VER.tar.gz \
+    && cd flite-$VER \
     && ls -al \
     && sed -ri 's/cmu_us_kal.*/cmu_us_kal16 cmu_us_slt/' config/ben.lv \
     && CFLAGS="-fPIC" ./configure \
@@ -26,9 +30,10 @@ RUN tar -xvf flite-$VER-release.tar.bz2 \
     && make -j1        LDFLAGS="--static"
 
 RUN mkdir -p /z/rls \
-    && cd flite-$VER-release/bin/ \
+    && cd flite-$VER/bin/ \
     && cp -pv flite flite_cmu_us_* /z/rls \
-    && strip /z/rls/*
+    && strip /z/rls/* \
+    && mv /z/*.flitevox /z/rls/
 
 
 # http://www.festvox.org/flite/packed/flite-2.1/voices/cmu_us_slt.flitevox

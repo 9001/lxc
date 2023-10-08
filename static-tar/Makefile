@@ -1,9 +1,10 @@
 all:
-	service docker start
-	
 	docker build -t static-tar .
+
+	rm -rf rls
 	
-	echo "cat /tar-static" | \
-	docker run --rm -i static-tar:latest > tar-static
+	echo tar -cC/ rls | \
+	docker run --rm --log-driver=none -i static-tar:latest | \
+	tar -xv
 	
-	chmod 755 tar-static
+	chmod 755 rls/tar

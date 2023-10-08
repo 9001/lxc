@@ -28,7 +28,7 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 | [ntfs3g](./static-ntfs3g) | nothing special |
 | [patchelf](./static-patchelf) | nothing special |
 | [pigz](./static-pigz) | nothing special |
-| [pixz](./static-pixz) | nothing special |
+| [pixz](./static-pixz) | also provides `bsdtar` / `bsdcpio` / `bsdunzip` / `xz` |
 | [pv](./static-pv) | nothing special |
 | [quickbms](./static-quickbms) | 32bit due to funky pointer arithmetics |
 | [quiet](./static-quiet) | with `fec` and hacks for unbounded pcm streaming and 48/96khz modes; see bottom of `Dockerfile` for usage |
@@ -44,8 +44,16 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 
 | program | notes |
 | -- | -- |
+| [uefi-shell](./uefi-shellbin) | shell.efi with some QoL hacks |
 | [mpv](./mpv) | very feature-complete build of mpv and ffmpeg, including hw-accel, for centos7/8 and debian |
 | [sshfs-c8](./sshfs-c8) | sshfs v3.7.2 for centos8, with crashfixes etc since the official v2.8 |
+
+
+# notes
+
+i have entirely given up on these: `mpv`
+
+and these too, but mainly because they're currently not very useful: `ext4magic`, `quiet`, `sshfs`, `syncthing`
 
 
 # todo

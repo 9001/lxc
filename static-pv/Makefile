@@ -1,18 +1,15 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-pv .
 	
-	rm -f pv-static
+	rm -rf rls
 	
-	echo tar -cC/ pv-static | \
-	docker run --rm -i static-pv:latest | \
+	echo tar -cC/ rls | \
+	docker run --rm --log-driver=none -i static-pv:latest | \
 	tar -xv
 	
-	ls -al ./pv-static
-	-ldd ./pv-static
-	./pv-static -h
+	ls -al rls/pv
+	-ldd rls/pv
+	rls/pv -h
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

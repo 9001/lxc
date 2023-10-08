@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
 ENV XD3_VER="3.0.11" \
@@ -26,9 +26,9 @@ RUN tar -xvf v$XD3_VER.tar.gz \
 RUN cd xdelta-$XD3_VER/xdelta3 \
     && ls -al \
     && make \
-        LDFLAGS="--static" \
-        EXEEXT="-static"
+        LDFLAGS="--static"
 
 RUN cd xdelta-$XD3_VER/xdelta3 \
-    && strip xdelta3-static \
-    && cp -pv xdelta3-static /
+    && strip xdelta3 \
+    && mkdir /rls \
+    && mv xdelta3 /rls

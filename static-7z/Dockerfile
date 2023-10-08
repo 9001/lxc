@@ -1,30 +1,37 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV     VER="17.04" \
-        SHA="ad176db5b657b1c39584f6792c47978d94f2f1ccb1cf5bdb0f52ab31a7356b3822f4a922152c4253f4aa7e79166ba052b6592530b7a38f548cd555fe9c008be3"
+ENV     VER="2301" \
+        SHA="e39f660c023aa65e55388be225b5591fe2a5c9138693f3c9107e2eb4ce97fafde118d3375e01ada99d29de9633f56221b5b3d640c982178884670cd84c8aa986"
+
+RUN     wget https://www.7-zip.org/a/7z$VER-src.tar.xz -O 7z.txz \
+        && sha512sum 7z.txz \
+        && echo "$SHA  7z.txz" | sha512sum -c \
+        && wget https://git.alpinelinux.org/aports/plain/main/7zip/7-zip-flags.patch \
+        && wget https://git.alpinelinux.org/aports/plain/main/7zip/7-zip-musl.patch
 
 RUN     apk add --no-cache \
             gcc g++ musl-dev make patch \
             attr-dev util-linux-dev linux-headers
 
-RUN     wget https://github.com/szcnick/p7zip/archive/v$VER.tar.gz -O 7z.tgz \
-        && echo "$SHA  7z.tgz" | sha512sum -c
-
-RUN     tar -xvf 7z.tgz \
-        && cd p7zip-$VER \
-        && make LDFLAGS="-static" -j4 7za \
-        && make LDFLAGS="-static" -j4 sfx
-# 'all' is broken, should have been "" (7za) + "sfx" (7zCon.sfx)
-
-# tests are broken too
-#RUN     cd p7zip-$VER \
-#        && chmod 755 check/check.sh \
-#        && make test
+# https://git.alpinelinux.org/aports/tree/main/7zip/APKBUILD
+RUN     tar -xvf 7z.txz \
+        && patch -p1 < 7-zip-flags.patch \
+        && patch -p1 < 7-zip-musl.patch \
+        && cd /z/CPP/7zip/Bundles/Alone2 \
+        && mkdir -p b/g \
+        && make -f ../../cmpl_gcc.mak LDFLAGS="-static" -j4 \
+            CC="${CC:-cc} $CFLAGS $LDFLAGS -D_GNU_SOURCE" \
+            CXX="${CXX:-c++} $CXXFLAGS $LDFLAGS -D_GNU_SOURCE" \
+        && cd /z/CPP/7zip/Bundles/SFXCon \
+        && mkdir -p b/g \
+        && make -f ../../cmpl_gcc.mak LDFLAGS="-static" -j4 \
+            CC="${CC:-cc} $CFLAGS $LDFLAGS -D_GNU_SOURCE" \
+            CXX="${CXX:-c++} $CXXFLAGS $LDFLAGS -D_GNU_SOURCE"
 
 RUN     mkdir /rls \
-        && cd /z/p7zip-${VER}/bin \
-        && mv * /rls \
+        && mv CPP/7zip/Bundles/Alone2/b/g/7zz /rls/7z \
+        && mv CPP/7zip/Bundles/SFXCon/b/g/7zCon /rls/7zCon.sfx \
         && for f in /rls/*; do strip $f; done

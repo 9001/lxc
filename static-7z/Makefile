@@ -1,21 +1,21 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-7z .
 	
 	rm -rf rls
 	
 	echo tar -cC/ rls | \
-	docker run --rm -i static-7z:latest | \
+	docker run --rm --log-driver=none -i static-7z:latest | \
 	tar -xv
 	
-	ls -al rls/7za
+	ls -al rls/7z
 	ldd rls/* | awk '1; !/^rls\// && !/statically linked$$/ {exit 1}'
-	rls/7za -h >/dev/null
+	rls/7z -h >/dev/null
 	
 	cp -pv run.sh sfx.sh rls
-	(cd rls && ./sfx.sh create_sfx 7za)
+	(cd rls && ./sfx.sh create_sfx 7z)
+	rm -rf rls
+	mkdir rls
+	mv 7z.sfx rls/7z
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

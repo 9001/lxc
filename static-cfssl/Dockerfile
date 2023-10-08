@@ -1,8 +1,8 @@
-FROM alpine:3.15 as build
+FROM alpine:3 as build
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
-ENV VER=1.6.1
+ENV VER=1.6.4
 RUN apk add --no-cache go git wget musl-dev \
     && wget -O arc https://github.com/cloudflare/cfssl/archive/refs/tags/v${VER}.tar.gz
 
@@ -17,20 +17,11 @@ ENV GOPATH=/z \
 # https://github.com/golang/go/issues/26492#issuecomment-435462350
 #
 # go will not have -static until early 1.14; make portable manually
-#
-# the rice stuff is only necessary if you want serve
 
-
-RUN go get github.com/GeertJohan/go.rice \
-    && go get github.com/GeertJohan/go.rice/rice
 
 RUN tar -xvf arc \
     && mkdir -p src/github.com/cloudflare \
     && mv cfssl-* src/github.com/cloudflare/cfssl \
-    \
-    && cd $GOPATH/src/github.com/cloudflare/cfssl/cli/serve \
-    && /z/bin/rice embed-go \
-    \
     && cd /z/src/github.com/cloudflare/cfssl \
     \
     && echo "building for linux" \

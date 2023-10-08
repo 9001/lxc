@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-ntfs3g .
 
 	rm -rf rls
 
 	echo tar -cC/ rls | \
-	docker run --rm -i static-ntfs3g:latest | \
+	docker run --rm --log-driver=none -i static-ntfs3g:latest | \
 	tar -xv
 	
 	ls -al rls

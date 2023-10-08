@@ -1,17 +1,14 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-unrar .
 	
-	rm -f unrar
+	rm -rf rls
 	
 	echo tar -cC/ rls | \
-	docker run --rm -i static-unrar:latest | \
-	tar -xv --strip-components=1
+	docker run --rm --log-driver=none -i static-unrar:latest | \
+	tar -xv
 	
-	ls -al ./unrar
-	./unrar >/dev/null
+	ls -al rls/unrar
+	rls/unrar >/dev/null
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

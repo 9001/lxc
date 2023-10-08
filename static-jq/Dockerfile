@@ -1,17 +1,18 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV VER="1.6" \
-    SHA="5da71f53c325257f1f546a2520fe47828b495c953270df25ea0e37741463fdda72f0ba4d5b05b25114ec30f27a559344c2b024bacabf610759f4e3e9efadb480"
+ENV VER="1.7" \
+    SHA="4f8a6b0401e6c881dcb97d948fe38871062599a43fff667ede21cf185ec9de33e61878f0a6ea12786d0a632eea592ea0ff860520ba02dbb32f2fa2d2b5db7a0a"
+
+RUN wget https://github.com/stedolan/jq/releases/download/jq-$VER/jq-$VER.tar.gz -O jq.tgz \
+    && sha512sum jq.tgz \
+    && echo "$SHA  jq.tgz" | sha512sum -c
 
 RUN apk add --no-cache \
         gcc g++ musl-dev make patch linux-headers \
         automake autoconf libtool m4
-
-RUN wget https://github.com/stedolan/jq/releases/download/jq-$VER/jq-$VER.tar.gz -O jq.tgz \
-    && echo "$SHA  jq.tgz" | sha512sum -c
 
 RUN tar -xvf jq.tgz \
     && cd jq-$VER \

@@ -1,10 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-rsync .
 	
-	echo "cat /rsync-static" | \
-	docker run --rm -i static-rsync:latest > rsync-static
+	rm -rf rls
+
+	echo tar -cC/ rls | \
+	docker run --rm --log-driver=none -i static-rsync:latest | \
+	tar -xv
 	
-	chmod 755 rsync-static
+	chmod 755 rls/rsync

@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-imagemagick .
 	
 	rm -rf rls
 	
-	echo tar -cC/usr/bin magick | \
-	docker run --rm -i static-imagemagick:latest | \
+	echo tar -cC/ rls | \
+	docker run --rm --log-driver=none -i static-imagemagick:latest | \
 	tar -xv
 
 sh:

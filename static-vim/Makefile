@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-vim .
 	
 	rm -rf rls
 	
 	echo tar -cC/ rls | \
-	docker run --rm -i static-vim:latest | \
+	docker run --rm --log-driver=none -i static-vim:latest | \
 	tar -xv
 	
 	ls -al rls/bin/vim
@@ -17,6 +14,9 @@ all:
 	
 	cp -pv run.sh sfx.sh rls
 	(cd rls && ./sfx.sh create_sfx vim)
+	rm -rf rls
+	mkdir rls
+	mv vim.sfx rls/vim
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

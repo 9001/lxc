@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-lzip .
 	
 	rm -rf src rls
 	
 	echo tar -cC /z rls src | \
-	docker run --rm -i static-lzip:latest | \
+	docker run --rm --log-driver=none -i static-lzip:latest | \
 	tar -xv
 	
 	mkdir rls/src

@@ -1,9 +1,10 @@
 all:
-	service docker start
-	
 	docker build -t static-xdelta3 .
 	
-	echo "cat /xdelta3-static" | \
-	docker run --rm -i static-xdelta3:latest > xdelta3-static
+	rm -rf rls
+
+	echo tar -cC/ rls | \
+	docker run --rm --log-driver=none -i static-xdelta3:latest | \
+	tar -xv
 	
-	chmod 755 xdelta3-static
+	chmod 755 rls/xdelta3

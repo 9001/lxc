@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-minimodem .
 	
 	rm -rf rls
 	
 	echo tar -cC /z rls | \
-	docker run --rm -i static-minimodem:latest | \
+	docker run --rm --log-driver=none -i static-minimodem:latest | \
 	tar -xv
 	
 	mkdir rls/src

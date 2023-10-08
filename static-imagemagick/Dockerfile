@@ -1,28 +1,30 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 RUN apk add --no-cache \
-        gcc g++ musl-dev make autoconf libtool automake file \
-        zlib-dev libpng-dev libjpeg-turbo-dev zlib-static \
-        libtool libwebp-dev chrpath graphviz \
-        tiff-dev zstd-static zstd-dev \
-        libpng-static \
-        libjpeg-turbo-static \
-        libwebp-static \
-        bzip2-static bzip2-dev \
-        freetype-static freetype-dev brotli-static brotli-dev \
-        fontconfig-static fontconfig-dev expat-static  \
-        lz4-static lz4-dev \
-        libxml2-utils libxml2-dev \
-        lcms2-dev \
-        xz-dev
+        gcc g++ musl-dev make autoconf automake file \
+        libtool chrpath graphviz \
+        brotli-dev brotli-static \
+        bzip2-dev bzip2-static \
+        expat-dev expat-static \
+        fontconfig-static fontconfig-dev \
+        freetype-dev freetype-static \
+        lcms2-dev lcms2-static \
+        libpng-dev libpng-static \
+        libjpeg-turbo-dev libjpeg-turbo-static \
+        libwebp-dev libwebp-static \
+        libxml2-dev libxml2-static libxml2-utils \
+        lz4-dev lz4-static \
+        xz-dev xz-static \
+        zlib-dev zlib-static \
+        zstd-dev zstd-static
 
 #https://git.alpinelinux.org/aports/tree/community/imagemagick/APKBUILD?id=03efedb335ff52238185e1307e1a1727bb317598
-RUN wget https://github.com/ImageMagick/ImageMagick/archive/refs/tags/7.1.0-17.tar.gz -Oimagemagick.tgz \
-    && echo "0b9950e19bea33841beacfc4a0e484f39005f048b66bd81aad14de678ecd4a62fb5cee029cf834324c0b7cfe41699ede263d4d4af3a30c0fbbbbcd129336c3e1  imagemagick.tgz" | sha512sum -c
+RUN wget https://imagemagick.org/archive/releases/ImageMagick-7.1.1-13.tar.xz -Oimagemagick.txz \
+    && echo "6f37da80abbb0e62959ef65145bff0de7c47e1a203858bf7b17535d7d26e8bbe351ec9b9ead1a679f5e48ecf8ffc339bec92a01cf4f78f03e7c0c288de4dc8e2  imagemagick.txz" | sha512sum -c
 
-RUN tar -xf imagemagick.tgz \
+RUN tar -xf imagemagick.txz \
     && cd ImageMagick* \
     && ./configure --help \
     && ./configure \
@@ -32,23 +34,24 @@ RUN tar -xf imagemagick.tgz \
         --enable-static=yes \
         --without-magick-plus-plus \
         --with-threads \
-        --with-tiff \
         --with-png \
         --with-webp \
         --with-modules \
-        --with-rsvg \
         --with-freetype \
         --with-fontconfig \
         --with-xml \
         --with-lcms \
+        --with-tiff=no \
         --with-gslib=no \
         --with-heic=no \
-    && sed -ri 's/ -ltiff/ -ltiff -lzstd/g;  s/( -lfontconfig.*)( -lxml2)/\1\2 -luuid -lexpat -lbrotlidec -lbrotlicommon/' Makefile
+    && sed -ri 's/ -ltiff/ -lzstd/g;  s/( -lfontconfig.*)( -lxml2)/\1\2 -lexpat -lbrotlidec -lbrotlicommon -lsharpyuv -lwebp/' Makefile
 
 RUN cd ImageMagick* \
     && make -j$(nproc) \
         LDFLAGS="--static" \
-    && make install
+    && make install \
+    && mkdir /rls \
+    && mv /usr/bin/magick /rls
 #        --disable-openmp \
 #        --disable-opencl \
 #        SHELL="ash -x" \

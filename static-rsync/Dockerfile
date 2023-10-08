@@ -1,15 +1,16 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-# latest commit in https://github.com/alpinelinux/aports/tree/3.15-stable
-ENV APORTS_VER="73f10f2c5075e6e9bdb695a333f1720742888433"
+# latest commit in https://github.com/alpinelinux/aports/tree/3.18-stable
+ENV APORTS_VER="17bbbc24a79c846b9f36c8194f2de3043f195f0a"
 
 RUN apk add --no-cache \
         alpine-sdk bzip2 curl git perl sudo \
         zstd-static zstd-dev \
         lz4-static lz4-dev \
-    && curl -L https://git.alpinelinux.org/aports/snapshot/aports-$APORTS_VER.tar.bz2 | \
-        tar -xj --strip-components=1 \
+    && mkdir main \
+    && curl -L https://github.com/alpinelinux/aports/archive/$APORTS_VER.tar.gz | \
+        tar -xz --strip-components=1 \
             aports-$APORTS_VER/main/musl \
             aports-$APORTS_VER/main/rsync
 
@@ -29,10 +30,11 @@ RUN cd main/musl \
     && find /main/musl -name fork.c -exec cat '{}' \+ \
     && rm -rf /main/musl/
 
-ENV RSYNC_VER="3.2.3" \
-    RSYNC_SHA="48b68491f3ef644dbbbfcaec5ab90a1028593e02d50367ce161fd9d3d0bd0a3628bc57c5e5dec4be3a1d213f784f879b8a8fcdfd789ba0f99837cba16e1ae70e"
+ENV RSYNC_VER="3.2.7" \
+    RSYNC_SHA="c2afba11a352fd88133f9e96e19d6df80eb864450c83eced13a7faa23df947bccf2ef093f2101df6ee30abff4cbbd39ac802e9aa5f726e42c9caff274fad8377"
 
 RUN wget https://download.samba.org/pub/rsync/src/rsync-$RSYNC_VER.tar.gz \
+    && sha512sum rsync-$RSYNC_VER.tar.gz \
     && echo "$RSYNC_SHA  rsync-$RSYNC_VER.tar.gz" | sha512sum -c
 
 # esxi compat/perf hacks
@@ -41,7 +43,6 @@ COPY rsync.patch /
 # https://git.alpinelinux.org/aports/tree/main/rsync/APKBUILD?id=1f2fe44a4d4e27e4bd8d844a8e56550a49d80777
 RUN tar -xvf rsync-$RSYNC_VER.tar.gz \
     && cd rsync-$RSYNC_VER \
-    && patch -p1 < /main/rsync/Fix-regression-with---delay-updates.patch \
     && patch -p1 < /rsync.patch \
     && ./configure \
         CFLAGS="-static -DINET6" \
@@ -56,7 +57,8 @@ RUN tar -xvf rsync-$RSYNC_VER.tar.gz \
 
 RUN cd rsync-$RSYNC_VER \
     && strip rsync \
-    && cp -pv rsync /rsync-static
+    && mkdir /rls \
+    && mv rsync /rls
 
 # printf '[a]\n\tpath = /\n\tcomment = ye\n' >/etc/rsyncd.conf
 # /bin/asdf --daemon --no-detach --address=0.0.0.0

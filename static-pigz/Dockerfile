@@ -1,10 +1,10 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV PIGZ_VER="2.6" \
-    PIGZ_SHA="04d2e44bc7a7eb061c3c48100ce5b8fc79931aeac72340abd768fd2a4499ff1004e2bc009772fc2003a4c599f6e90f3abc8bef5c377d6397f1c8e9f7c49f95e2" \
-    ZLIB_VER="1.2.11" \
-    ZLIB_SHA="73fd3fff4adeccd4894084c15ddac89890cd10ef105dd5e1835e1e9bbb6a49ff229713bd197d203edfa17c2727700fce65a2a235f07568212d820dca88b528ae"
+ENV PIGZ_VER="2.8" \
+    PIGZ_SHA="ae3d9d593e1645d65f9ab77aa828600c9af4bb30d0a073da7ae3dd805e65b87efaf6a0efb980f2d0168e475ae506eba194547d6479956dabb9d88293a9078a7f" \
+    ZLIB_VER="1.3" \
+    ZLIB_SHA="185795044461cd78a5545250e06f6efdb0556e8d1bfe44e657b509dd6f00ba8892c8eb3febe65f79ee0b192d6af857f0e0055326d33a881449f3833f92e5f8fb"
 
 RUN wget https://zlib.net/pigz/pigz-$PIGZ_VER.tar.gz \
     && sha512sum pigz-$PIGZ_VER.tar.gz \
@@ -22,16 +22,15 @@ RUN tar -xvf zlib-$ZLIB_VER.tar.gz \
     && make \
         CFLAGS="-static" \
         LDFLAGS="-static" \
-        EXEEXT="-static" \
     && make install
 
 RUN tar -xvf pigz-$PIGZ_VER.tar.gz \
     && cd pigz-$PIGZ_VER \
     && make \
         CFLAGS="-static -I/deps/include" \
-        LDFLAGS="-static -L/deps/lib" \
-        EXEEXT="-static"
+        LDFLAGS="-static -L/deps/lib"
 
 RUN cd pigz-$PIGZ_VER \
     && strip pigz \
-    && cp -pv pigz /pigz-static
+    && mkdir /rls \
+    && mv pigz /rls

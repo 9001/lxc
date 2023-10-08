@@ -1,8 +1,8 @@
-FROM i386/alpine:3.15
+FROM docker.io/i386/alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV VER="1.34" \
-    SHA="5e77c4a7b49983ad7d15238c2bce28be7a8aa437b4b1815fc00abd13096da308b6bba196cc6e3ed79d85e62823d520ae0d8fcda2d93873842cf84dc3369fc902"
+ENV VER="1.35" \
+    SHA="8b84ed661e6c878fa33eb5c1808d20351e6f40551ac63f96014fb0d0b9c72d5d94d8865d39e36bcb184fd250f84778a3b271bbd8bd2ceb69eece0c3568577510"
 
 RUN wget https://ftp.gnu.org/gnu/tar/tar-$VER.tar.xz \
     && sha512sum tar-$VER.tar.xz \
@@ -25,11 +25,11 @@ RUN tar -xvf tar-$VER.tar.xz \
         LDFLAGS="-static" \
     && make \
         CFLAGS="-static" \
-        LDFLAGS="-static" \
-        EXEEXT="-static"
+        LDFLAGS="-static"
 
-RUN cd tar-$VER \
-    && strip src/tar-static \
-    && cp -pv src/tar-static /
+RUN cd tar-$VER/src \
+    && strip tar \
+    && mkdir /rls \
+    && mv tar /rls
 
 # --disable-largefile to use fstatat rather than fstatat64 for esxi

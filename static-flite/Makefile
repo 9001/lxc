@@ -1,19 +1,15 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-flite .
 	
 	rm -rf rls
 	
 	echo tar -cC /z rls | \
-	docker run --rm -i static-flite:latest | \
+	docker run --rm --log-driver=none -i static-flite:latest | \
 	tar -xv
 	
 	mkdir rls/src
 	cp -pv Dockerfile Makefile .dockerignore rls/src/
-	chmod 755 rls/*
-	(cd rls && ln -s ../res/cmu_us_slt.flitevox .)
+	chmod 755 rls/flite*
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

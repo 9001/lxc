@@ -1,13 +1,10 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-jq .
 	
 	rm -rf rls
 
 	echo tar -cC/ rls | \
-	docker run --rm -i static-jq:latest | \
+	docker run --rm --log-driver=none -i static-jq:latest | \
 	tar -xv
 	
 	ls -al rls

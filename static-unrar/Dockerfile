@@ -1,10 +1,11 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV VER="6.1.3" \
-    SHA="a5626adbe2ba063082156542f9cf6658f57f917ae1fa565809b19479629c65632033f0acb0800b0083e02e218fcefb4b0a24635a84c3bd8a2919971f2cf89cb3"
+# https://www.rarlab.com/rar_add.htm
+ENV VER="6.2.11" \
+    SHA="07504d5a08ae12190b43c6898e11cebc868ae373eae756ebb8a446c5c5a42ef456652e86a81dc855a23edae43144be3bf55e57768e7b4fa188ab4368cfa0657e"
 
 COPY makefile.patch /z
 

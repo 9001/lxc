@@ -1,16 +1,13 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-quickbms .
 	
-	rm -f quickbms
+	rm -rf rls
 	
 	echo tar -cC/ rls | \
-	docker run --rm -i static-quickbms:latest | \
-	tar -xv --strip-components=1
+	docker run --rm --log-driver=none -i static-quickbms:latest | \
+	tar -xv
 	
-	./quickbms -h >/dev/null
+	rls/quickbms -h >/dev/null
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

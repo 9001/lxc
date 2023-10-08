@@ -1,14 +1,11 @@
 all:
-	-service docker start
-	-systemctl start docker
-	
 	docker build -t static-tmux .
 	
-	rm -f tmux
+	rm -rf rls
 	
 	echo tar -cC /z rls | \
-	docker run --rm -i static-tmux:latest | \
-	tar -xv --strip-components=1
+	docker run --rm --log-driver=none -i static-tmux:latest | \
+	tar -xv
 	
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

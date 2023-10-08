@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
 ENV MM_VER="0.24-1" \
@@ -12,8 +12,9 @@ WORKDIR /z
 
 RUN cat /etc/resolv.conf \
     && wget https://github.com/kamalmostafa/minimodem/archive/minimodem-$MM_VER.tar.gz \
-    && echo "$MM_SHA  minimodem-$MM_VER.tar.gz" | sha512sum -c \
     && wget https://github.com/erikd/libsndfile/archive/$SF_VER.tar.gz \
+    && sha512sum * \
+    && echo "$MM_SHA  minimodem-$MM_VER.tar.gz" | sha512sum -c \
     && echo "$SF_SHA  $SF_VER.tar.gz" | sha512sum -c \
     && apk add --no-cache \
         gcc g++ musl-dev make cmake automake autoconf m4 libtool \
