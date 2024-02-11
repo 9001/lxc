@@ -3,8 +3,8 @@ MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV VER="1.7" \
-    SHA="4f8a6b0401e6c881dcb97d948fe38871062599a43fff667ede21cf185ec9de33e61878f0a6ea12786d0a632eea592ea0ff860520ba02dbb32f2fa2d2b5db7a0a"
+ENV VER="1.7.1" \
+    SHA="464861fb2e0d6934b616f1dc7f8002d7dae727c8c0c07b385b813e7522ba1ada8ead4165e1d99c892e3ea76e238c55a15b718c738805419721920f88f8d8478c"
 
 RUN wget https://github.com/stedolan/jq/releases/download/jq-$VER/jq-$VER.tar.gz -O jq.tgz \
     && sha512sum jq.tgz \

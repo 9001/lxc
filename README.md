@@ -2,6 +2,8 @@
 
 everything here is unmaintained garbage but may serve as a reference on static builds or whatnot
 
+the latest sfx build can be downloaded here: https://a.ocv.me/pub/stuff/bin/9001-lxc.sfx
+
 PRs with updates / fixes / new stuff welcome
 
 

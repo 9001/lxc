@@ -9,7 +9,7 @@ RUN apk add --no-cache \
 
 RUN wget https://github.com/libtom/libtommath/releases/download/v1.2.1/ltm-1.2.1.tar.xz -O ltm.txz \
     && wget https://github.com/libtom/libtomcrypt/releases/download/v1.18.2/crypt-1.18.2.tar.xz -O ltc.txz \
-    && wget https://downloads.sourceforge.net/mcrypt/libmcrypt-2.5.8.tar.bz2 -O libmcrypt.tbz2 \
+    && wget -UMozarella/Cheddar https://downloads.sourceforge.net/mcrypt/libmcrypt-2.5.8.tar.bz2 -O libmcrypt.tbz2 \
     && wget https://git.alpinelinux.org/aports/plain/community/libmcrypt/fix_enigma.patch \
     && wget https://aluigi.altervista.org/papers/quickbms-src-0.12.0.zip -O quickbms.zip
 

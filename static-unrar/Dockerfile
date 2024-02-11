@@ -4,8 +4,8 @@ MAINTAINER ed <statics@ocv.me>
 WORKDIR /z
 
 # https://www.rarlab.com/rar_add.htm
-ENV VER="6.2.11" \
-    SHA="07504d5a08ae12190b43c6898e11cebc868ae373eae756ebb8a446c5c5a42ef456652e86a81dc855a23edae43144be3bf55e57768e7b4fa188ab4368cfa0657e"
+ENV VER="6.2.12" \
+    SHA="261ac3728f917f36a03c7c3c563d7775abdb06b598ab48a299d837e8fc0ca75ad885ec8e292aeb1775e87e775ed274e9e0f033001598229ec96db69d69824ddb"
 
 COPY makefile.patch /z
 

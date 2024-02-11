@@ -3,9 +3,8 @@ MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-# latest in alpine-edge
-ENV     VER="9.0.1888" \
-        SHA="4eff10f09c921ad766abbd950724f4f362d506d8c52730d2ed60b317f7b9aa2372ce496e75b65a674e3a250a79f08cc8dcf078f71a1b9858ead469a2cdcfab6f"
+ENV     VER="9.1.0" \
+        SHA="d7038c5c413bfd1a125a893c0b1d3e498e9ce6b5df7d45ef536faac966ce2846b08fe2982010c31f30b34fda07ba2c6922d795806509d05d73768626edc70374"
 
 RUN     apk add --no-cache \
             gcc musl-dev make patch \

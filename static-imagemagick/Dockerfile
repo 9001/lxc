@@ -20,9 +20,10 @@ RUN apk add --no-cache \
         zlib-dev zlib-static \
         zstd-dev zstd-static
 
-#https://git.alpinelinux.org/aports/tree/community/imagemagick/APKBUILD?id=03efedb335ff52238185e1307e1a1727bb317598
-RUN wget https://imagemagick.org/archive/releases/ImageMagick-7.1.1-13.tar.xz -Oimagemagick.txz \
-    && echo "6f37da80abbb0e62959ef65145bff0de7c47e1a203858bf7b17535d7d26e8bbe351ec9b9ead1a679f5e48ecf8ffc339bec92a01cf4f78f03e7c0c288de4dc8e2  imagemagick.txz" | sha512sum -c
+        #libjxl-dev libjxl-static \  "libjxl.a: error adding symbols: file format not recognized"
+
+RUN wget https://imagemagick.org/archive/releases/ImageMagick-7.1.1-26.tar.xz -Oimagemagick.txz \
+    && echo "55b93b30781b3a5d90e43caf33dd55bdc6b8e2e0ed11fcbee64ba4d2d98a73b41c9cfc7efafb7efca1bca5bcf27d98862d05ab524b09a4047a49f3d8f6a098a7  imagemagick.txz" | sha512sum -c
 
 RUN tar -xf imagemagick.txz \
     && cd ImageMagick* \
@@ -44,7 +45,7 @@ RUN tar -xf imagemagick.txz \
         --with-tiff=no \
         --with-gslib=no \
         --with-heic=no \
-    && sed -ri 's/ -ltiff/ -lzstd/g;  s/( -lfontconfig.*)( -lxml2)/\1\2 -lexpat -lbrotlidec -lbrotlicommon -lsharpyuv -lwebp/' Makefile
+        LIBS='-lwebp -lsharpyuv -lbrotlidec -lbrotlicommon -lexpat'
 
 RUN cd ImageMagick* \
     && make -j$(nproc) \

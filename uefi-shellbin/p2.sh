@@ -6,7 +6,11 @@ cd edk2
 
 sed -ri 's/(.*\.ShellInitSettings\.BitUnion\.Bits\.NoMap *= *)FALSE/\1TRUE/' ShellPkg/Application/Shell/Shell.c
 
+# PcdShellDefaultDelay: num sec countdown before startup.nsh is executed
+# PcdShellScreenLogCount: num screens of scrollback; >= 1
+# PcdShellSupplier: banner text
 args=(
+    --pcd gEfiShellPkgTokenSpaceGuid.PcdShellDefaultDelay=1
     --pcd gEfiShellPkgTokenSpaceGuid.PcdShellScreenLogCount=8
     --pcd gEfiShellPkgTokenSpaceGuid.PcdShellSupplier=a
 )

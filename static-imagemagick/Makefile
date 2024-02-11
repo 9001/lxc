@@ -7,6 +7,8 @@ all:
 	docker run --rm --log-driver=none -i static-imagemagick:latest | \
 	tar -xv
 
+	rls/magick --version
+
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"
 	docker run --rm -it `docker image ls -aq | head -n 1` /bin/ash
