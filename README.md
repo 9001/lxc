@@ -27,6 +27,7 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 | [jq](./static-jq) | nothing special |
 | [lzip](./static-lzip) | and most of the side-projects |
 | [minimodem](./static-minimodem) | no pulse or alsa; see `notes.txt` for how to stream pcm instead |
+| [ncdu](./static-ncdu) | nothing special |
 | [ntfs3g](./static-ntfs3g) | nothing special |
 | [patchelf](./static-patchelf) | nothing special |
 | [pigz](./static-pigz) | nothing special |
@@ -35,10 +36,12 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 | [quickbms](./static-quickbms) | 32bit due to funky pointer arithmetics |
 | [quiet](./static-quiet) | with `fec` and hacks for unbounded pcm streaming and 48/96khz modes; see bottom of `Dockerfile` for usage |
 | [rsync](./static-rsync) | with hacks (`musl.patch` and `rsync.patch`) to make it run fast on esxi (TODO check compat with regular rsync), and does NOT have iconv / ipv6 |
+| [socat](./static-socat) | nothing special |
 | [syncthing](./static-syncthing) | with modified defaults to discourage phoning home |
 | [tar](./static-tar) | hella basic (32bit and no largefile/acl/nls) to support esxi |
 | [tmux](./static-tmux) | nothing special |
 | [unrar](./static-unrar) | nothing special |
+| [vim](./static-vim) | nothing special |
 | [xdelta3](./static-xdelta3) | nothing special |
 
 
