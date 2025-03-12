@@ -1,0 +1,8 @@
+change printf %B from #00f to #f0f because blue-on-black is unreadable
+--- a/ShellPkg/Library/UefiShellLib/UefiShellLib.c
++++ b/ShellPkg/Library/UefiShellLib/UefiShellLib.c
+@@ -3037,3 +3037,3 @@
+           case (L'B'):
+-            gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_LIGHTBLUE, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
++            gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (EFI_LIGHTMAGENTA, ((OriginalAttribute&(BIT4|BIT5|BIT6))>>4)));
+             break;

@@ -25,6 +25,9 @@ RUN cd edk2 && dos2unix ShellPkg/Application/Shell/Shell.uni && patch -p1 </z/te
 #COPY noscroll.patch .
 #RUN cd edk2 && dos2unix ShellPkg/Application/Shell/ConsoleLogger.c && patch -p1 </z/noscroll.patch
 
+COPY noblue.patch .
+RUN cd edk2 && dos2unix ShellPkg/Library/UefiShellLib/UefiShellLib.c && patch -p1 </z/noblue.patch
+
 COPY dmpstore-yolo.patch .
 RUN cd edk2 && dos2unix ShellPkg/Library/UefiShellDebug1CommandsLib/DmpStore.c && patch -p1 </z/dmpstore-yolo.patch
 
