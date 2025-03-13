@@ -1,4 +1,4 @@
-FROM docker.io/i386/alpine:3
+FROM docker.io/i386/alpine:3.19
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z

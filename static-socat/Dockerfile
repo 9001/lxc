@@ -1,8 +1,8 @@
 FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV VER="1.8.0.0" \
-    SHA="edf459a9f1907a14025e13b3101ad29787f9a72795cffcd00017ce98847562884db29a95b9ae478a6a50868137548b142947c43fb18e975eb5853a763c42902c"
+ENV VER="1.8.0.3" \
+    SHA="600a3387e9756e0937d2db49de9066df03d9818e4042da6b72109d1b5688dd72352754773a19bd2558fe93ec6a8a73e80e7cf2602fd915960f66c403fd89beef"
 
 RUN wget http://www.dest-unreach.org/socat/download/socat-$VER.tar.gz \
     && sha512sum socat-$VER.tar.gz \

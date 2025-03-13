@@ -1,5 +1,5 @@
 all:
-	docker build -t static-quickbms .
+	podman build --arch i386 -t static-quickbms .
 	
 	rm -rf rls
 	

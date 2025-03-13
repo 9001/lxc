@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:3.18
 MAINTAINER ed <statics@ocv.me>
 
 # latest commit in https://github.com/alpinelinux/aports/tree/3.18-stable

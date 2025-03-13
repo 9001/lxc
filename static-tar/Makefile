@@ -1,5 +1,5 @@
 all:
-	docker build -t static-tar .
+	podman build --arch i386 -t static-tar .
 
 	rm -rf rls
 	

@@ -3,8 +3,8 @@ MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV     VER="2301" \
-        SHA="e39f660c023aa65e55388be225b5591fe2a5c9138693f3c9107e2eb4ce97fafde118d3375e01ada99d29de9633f56221b5b3d640c982178884670cd84c8aa986"
+ENV     VER="2408" \
+        SHA="889e9aeaa629d6474a609a15066b2fa7b1353fa5e7255e044297591f565b08b16b885d44f4c4a046f2f9da189599ace300cf61fd9ac0e7bc316fb9d96a18a039"
 
 RUN     wget https://www.7-zip.org/a/7z$VER-src.tar.xz -O 7z.txz \
         && sha512sum 7z.txz \
@@ -18,8 +18,8 @@ RUN     apk add --no-cache \
 
 # https://git.alpinelinux.org/aports/tree/main/7zip/APKBUILD
 RUN     tar -xvf 7z.txz \
-        && patch -p1 < 7-zip-flags.patch \
-        && patch -p1 < 7-zip-musl.patch \
+        && patch -p1 --binary < 7-zip-flags.patch \
+        && patch -p1 --binary < 7-zip-musl.patch \
         && cd /z/CPP/7zip/Bundles/Alone2 \
         && mkdir -p b/g \
         && make -f ../../cmpl_gcc.mak LDFLAGS="-static" -j4 \

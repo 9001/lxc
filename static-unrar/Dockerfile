@@ -4,10 +4,8 @@ MAINTAINER ed <statics@ocv.me>
 WORKDIR /z
 
 # https://www.rarlab.com/rar_add.htm
-ENV VER="6.2.12" \
-    SHA="261ac3728f917f36a03c7c3c563d7775abdb06b598ab48a299d837e8fc0ca75ad885ec8e292aeb1775e87e775ed274e9e0f033001598229ec96db69d69824ddb"
-
-COPY makefile.patch /z
+ENV VER="7.1.5" \
+    SHA="378bd29e6c89d7a11891947967f8235db4690155c91af7b6da0ef3dac4ead34fa5818ead997e3068929b2a4f0f26eb29c0febb41ef093a771eea63ab00e0c36d"
 
 RUN apk add --no-cache \
         gcc g++ musl-dev make patch \
@@ -19,7 +17,6 @@ RUN wget https://www.rarlab.com/rar/unrarsrc-$VER.tar.gz -O unrar.tgz \
 
 RUN tar -xvf unrar.tgz \
     && cd unrar \
-    && patch -p1 < /z/makefile.patch \
     && make LDFLAGS="-static" -j$(nproc)
 
 RUN mkdir /rls \

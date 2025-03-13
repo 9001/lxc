@@ -2,8 +2,8 @@ FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 WORKDIR /z
 
-ENV VER="3.16" \
-    SHA="32c0a35c632ade4185ba495495842fe7a6af62cb8a8691b791ea4b37429b7b9a22baf5e7389a4c41e344fb35149cf64ece6adda2c79cc096c7787f7c2e3421da"
+ENV VER="3.18" \
+    SHA="468bbb040e8dc43c664854c823b7d79d9836da774a53f080fdd2258c836874247ca1f876dff490021e0ad3d38a00f972ffeea10eb149fb1fc75bf18e8fd9e974"
 
 RUN wget https://github.com/esnet/iperf/archive/$VER.tar.gz \
     && sha512sum $VER.tar.gz \

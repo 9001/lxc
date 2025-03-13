@@ -4,6 +4,9 @@ set -e
 # skipping these:
 #   gentoo-native
 
+[ -e uefi-shellbin ] && [ -e bndl.sh ] &&
+    find -type d -name rls -exec rm -rf '{}' +
+
 for d in static-* uefi-shellbin ; do
     #        cfssl: OK, but official builds are smaller
     #    ext4magic: unmaintained (still works)

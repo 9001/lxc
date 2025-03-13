@@ -1,12 +1,12 @@
 FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV TMUX_VER="3.3a" \
-    TMUX_SHA="29a846df7d93601c42a22f84f606931dc65da1f70b67d351d0425f77ea3affe3e8218b2940d42cd3dadf3cd1aa95032daad3ecb14fbff0f69939d1beae0498c7" \
+ENV TMUX_VER="3.5a" \
+    TMUX_SHA="2383e99aec2dcdb1d899793d5ecab40a68b921194f84770d3f4d19712bfc85590657a99d2a9a7bec36d4ba5ab39fa713f13937b0acad3b61cd9b2302dba61d43" \
     EVNT_VER="2.1.12" \
     EVNT_SHA="88d8944cd75cbe78bc4e56a6741ca67c017a3686d5349100f1c74f8a68ac0b6410ce64dff160be4a4ba0696ee29540dfed59aaf3c9a02f0c164b00307fcfe84f" \
-    U8PR_VER="2.8.0" \
-    U8PR_SHA="4b9853fc95db38bee1d7435bef219907e25b249e0c2ec26f7096b8506ab2a139a8d4b71f7133b7550bff59d8f997fe01c2957d362cad18d890ad82bcf158aa06"
+    U8PR_VER="2.10.0" \
+    U8PR_SHA="92a771606bcbecbb86c8d101931bc042dc7035938a665a7a449c2d8a7d3255df9df9c77c5cab0fc9dcaecb04be970149f60bfff463fc813e96727b7035ca9bb4"
 
 WORKDIR /z
 
@@ -18,7 +18,8 @@ RUN wget https://github.com/tmux/tmux/releases/download/$TMUX_VER/tmux-$TMUX_VER
     && echo "$EVNT_SHA  libevent-$EVNT_VER-stable.tar.gz" | sha512sum -c \
     && echo "$U8PR_SHA  v$U8PR_VER.tar.gz" | sha512sum -c \
     && apk add --no-cache \
-        gcc g++ musl-dev make automake autoconf m4 libtool bzip2 ncurses-dev ncurses-static cmake
+        gcc g++ musl-dev make automake autoconf m4 libtool \
+        bzip2 ncurses-dev ncurses-static bison cmake
 
 RUN tar -xvf libevent-$EVNT_VER-stable.tar.gz \
     && cd libevent-$EVNT_VER-stable \

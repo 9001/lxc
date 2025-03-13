@@ -2,8 +2,8 @@ FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 WORKDIR /z
 
-ENV VER="1.8.5" \
-    SHA="6d7a0f785ace5e25c5677af4cf38a003386774e60563865de7f1dae60f1785685541da93e1f88236b8b2e14431584bc2cb2adb3a575fb90dc774bc6bacf22e21"
+ENV VER="1.9.31" \
+    SHA="63cdc6223cde4f3f0daf47b5808a3f72a9cfaf2c05751e971a99d9dd3df2f36430958213c023931f428c87341a5f6c1f3772f30ca992123ea4c2a2e48000ff1d"
 
 RUN wget http://www.ivarch.com/programs/sources/pv-$VER.tar.gz \
     && sha512sum pv-$VER.tar.gz \

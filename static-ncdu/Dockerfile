@@ -1,8 +1,8 @@
 FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV VER="1.21" \
-    SHA="10ffb2fdacf465a410e8733acc3f2f7f6304998e8e6cb9b4c42b5c6aa6e588ef7d262b72d5d83d8bbc80964fa9850b4b4a9bc9c58224fb41598eeae399771674"
+ENV VER="1.22" \
+    SHA="04f338e7b0992c1d94893dc6f2ad80318618690232c7bba43cd9a01ce513052460ed396dca49a060f31dbbb72dcddd59e7f78715dbe0da937a7f3d7725f8d2c1"
 
 RUN wget https://dev.yorhel.nl/download/ncdu-$VER.tar.gz \
     && sha512sum ncdu-$VER.tar.gz \

@@ -3,11 +3,11 @@ MAINTAINER ed <statics@ocv.me>
 WORKDIR /z
 
 ENV PIXZ_VER="1.0.7" \
-    LARC_VER="3.7.2" \
-    XZ_VER="5.2.12" \
+    LARC_VER="3.7.7" \
+    XZ_VER="5.6.4" \
     PIXZ_SHA="4811da538931620bf05499912c98a501c2c879f3086cd59c4c67b302ded3547a9d246e7fd01ad36512e361c6c4e206e23f2aaf028b25ad44b74b529547a7f5ab" \
-    LARC_SHA="1af253203df3014d1fbf3e99ebdc7aa2a3f036c7c2606d0f0550c49973b0fff99ee7262f4a6e20090c0806c40e964731334360daa3b718bde40108183eacc8a1" \
-    XZ_SHA="1a67112eb1cfd70352c41a1cbb5e34eacd6da2ae816f5020385772a7698b835d059843c2c30461beb15b7514e95906b2033dac6abf09248b5837270420dfe732"
+    LARC_SHA="cce6eecfcd33d228bd1b1162a90bad63750adb53ac4edcaed34e2fdc30b6ba211cf1fd25d4b8761373949ceec266478b09bd70ffa4e374803a29e8573d6d149e" \
+    XZ_SHA="b966950eb9206e31f284c9dc3bb0a79f2fabbaf515e88c89da53d3da41ddfeebd2fc6d3d3f8fcd150c70caaaefa43dec0bce84aa183e08bf339d1aebbe041751"
 
 RUN wget https://github.com/vasi/pixz/releases/download/v$PIXZ_VER/pixz-$PIXZ_VER.tar.gz \
     && wget https://www.libarchive.org/downloads/libarchive-$LARC_VER.tar.gz \

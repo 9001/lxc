@@ -3,12 +3,12 @@ MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV     VER="9.1.0" \
-        SHA="d7038c5c413bfd1a125a893c0b1d3e498e9ce6b5df7d45ef536faac966ce2846b08fe2982010c31f30b34fda07ba2c6922d795806509d05d73768626edc70374"
+ENV     VER="9.1.1105" \
+        SHA="f109771344afb84ff77a1c616e5dc96456580222552233b935a6c4c13cc04eab474f889d51132ffb78edbe9d76ab50ce1022ef9deafcadf57e4b4f7bbe1ab4d9"
 
 RUN     apk add --no-cache \
             gcc musl-dev make patch \
-            ncurses-static
+            ncurses-dev ncurses-static
 
 RUN     wget https://github.com/vim/vim/archive/v$VER.tar.gz -O vim.tgz \
         && sha512sum * \
@@ -16,11 +16,14 @@ RUN     wget https://github.com/vim/vim/archive/v$VER.tar.gz -O vim.tgz \
 
 RUN     tar -xf vim.tgz \
         && cd vim-$VER \
-        && LDFLAGS="-static -fstack-protector-strong" ./configure \
+        && LDFLAGS="-static -fstack-protector-strong -flto=auto" ./configure \
                 --prefix=/tmp/pe-vim \
                 --enable-fail-if-missing \
                 --enable-multibyte \
                 --with-tlib=ncursesw \
+                --enable-gui=no \
+                --without-x \
+                --disable-nls \
                 --disable-netbeans \
         && make -j$(nproc) \
         && make install
