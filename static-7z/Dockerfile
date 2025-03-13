@@ -23,11 +23,13 @@ RUN     tar -xvf 7z.txz \
         && cd /z/CPP/7zip/Bundles/Alone2 \
         && mkdir -p b/g \
         && make -f ../../cmpl_gcc.mak LDFLAGS="-static" -j4 \
+            DISABLE_RAR=1 \
             CC="${CC:-cc} $CFLAGS $LDFLAGS -D_GNU_SOURCE" \
             CXX="${CXX:-c++} $CXXFLAGS $LDFLAGS -D_GNU_SOURCE" \
         && cd /z/CPP/7zip/Bundles/SFXCon \
         && mkdir -p b/g \
         && make -f ../../cmpl_gcc.mak LDFLAGS="-static" -j4 \
+            DISABLE_RAR=1 \
             CC="${CC:-cc} $CFLAGS $LDFLAGS -D_GNU_SOURCE" \
             CXX="${CXX:-c++} $CXXFLAGS $LDFLAGS -D_GNU_SOURCE"
 

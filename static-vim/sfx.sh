@@ -11,15 +11,9 @@ _sfx_dir="$(
 
 (
 sfxid=foo
-dec1=pixz; dec2=J; comp1=(pixz -7k); comp2=(xz -cze7T0)  # 3.5m 0.3s
-dec1=pigz; dec2=z; comp1=(pigz -11 -cI 100); comp2=(gzip -c)  # 4.3m 0.1s
 
 [ "$1" = "create_sfx" ] && {
 	sfxid=$(printf %s_%s $(date +%s) $$)
-	
-	command -v ${comp1[0]} >/dev/null &&
-		comp="${comp1[*]}" ||
-		comp="${comp2[*]}"
 	
 	out=../$2.sfx
 	echo packing $out
@@ -31,7 +25,7 @@ dec1=pigz; dec2=z; comp1=(pigz -11 -cI 100); comp2=(gzip -c)  # 4.3m 0.1s
 		LC_ALL=C sort |
 		tee /dev/stderr |
 		tar -cT- --numeric-owner --owner=1000 --group=1000 |
-		$comp
+		xz -cze2T0
 	) > $out
 	chmod 755 $out
 	printf '\ncreated %s\n' "$(realpath $out)"
@@ -50,12 +44,8 @@ dec1=pigz; dec2=z; comp1=(pigz -11 -cI 100); comp2=(gzip -c)  # 4.3m 0.1s
 		exit 1
 	}
 	
-	command -v $dec1 >/dev/null &&
-		dec=I$dec1 ||
-		dec=$dec2
-	
 	tail -n +$ln "$0" |
-	tar -$dec -xC "$_sfx_dir"
+	tar -xJC "$_sfx_dir"
 	
 	printf '\033[0m'
 	

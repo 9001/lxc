@@ -28,6 +28,8 @@ RUN     tar -xf vim.tgz \
         && make -j$(nproc) \
         && make install
 
+COPY    vimrc /tmp/pe-vim/share/vim/vimrc
+
 RUN     mv /tmp/pe-vim /rls \
         && for f in /rls/bin/*; do strip $f; done \
         && cd /rls/share/vim/vim* \

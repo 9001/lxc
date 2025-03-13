@@ -21,9 +21,10 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 | -- | -- |
 | [7z](./static-7z) | including the sfx plugin |
 | [cfssl](./static-cfssl) | nothing special |
-| [ext4magic](./static-ext4magic) | nothing special |
+| [ext4magic](./static-ext4magic) | **UNMAINTAINED** ~~nothing special~~ |
 | [flite](./static-flite) | full build, and separate builds with just kal16 and slt |
-| [imagemagick](./static-imagemagick) | fairly featurecomplete (freetype-brotli, fontconfig, tiff-zstd, png, webp, rsvg, xml, lcms), **but NOT:** gslib, heic |
+| [imagemagick](./static-imagemagick) | **UNMAINTAINED** ~~fairly featurecomplete (freetype-brotli, fontconfig, tiff-zstd, png, webp, rsvg, xml, lcms)~~ |
+| [iperf3](./static-iperf3) | nothing special |
 | [jq](./static-jq) | nothing special |
 | [lzip](./static-lzip) | and most of the side-projects |
 | [minimodem](./static-minimodem) | no pulse or alsa; see `notes.txt` for how to stream pcm instead |
@@ -33,14 +34,14 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 | [pigz](./static-pigz) | nothing special |
 | [pixz](./static-pixz) | also provides `bsdtar` / `bsdcpio` / `bsdunzip` / `xz` |
 | [pv](./static-pv) | nothing special |
-| [quickbms](./static-quickbms) | 32bit due to funky pointer arithmetics |
-| [quiet](./static-quiet) | with `fec` and hacks for unbounded pcm streaming and 48/96khz modes; see bottom of `Dockerfile` for usage |
+| [quickbms](./static-quickbms) | **UNMAINTAINED** ~~32bit due to funky pointer arithmetics~~ |
+| [quiet](./static-quiet) | **UNMAINTAINED** ~~with `fec` and hacks for unbounded pcm streaming and 48/96khz modes; see bottom of `Dockerfile` for usage~~ |
 | [rsync](./static-rsync) | with hacks (`musl.patch` and `rsync.patch`) to make it run fast on esxi (TODO check compat with regular rsync), and does NOT have iconv / ipv6 |
 | [socat](./static-socat) | nothing special |
-| [syncthing](./static-syncthing) | with modified defaults to discourage phoning home |
+| [syncthing](./static-syncthing) | **UNMAINTAINED** ~~with modified defaults to discourage phoning home~~ |
 | [tar](./static-tar) | hella basic (32bit and no largefile/acl/nls) to support esxi |
 | [tmux](./static-tmux) | nothing special |
-| [unrar](./static-unrar) | nothing special |
+| [unrar](./static-unrar) | **UNMAINTAINED** ~~nothing special~~ |
 | [vim](./static-vim) | nothing special |
 | [xdelta3](./static-xdelta3) | nothing special |
 
@@ -50,15 +51,17 @@ portable binaries built with musl, should run on all unixes (maybe even esxi)
 | program | notes |
 | -- | -- |
 | [uefi-shell](./uefi-shellbin) | shell.efi with some QoL hacks |
-| [mpv](./mpv) | very feature-complete build of mpv and ffmpeg, including hw-accel, for centos7/8 and debian |
-| [sshfs-c8](./sshfs-c8) | sshfs v3.7.2 for centos8, with crashfixes etc since the official v2.8 |
+| [mpv](./mpv) | **UNMAINTAINED** ~~very feature-complete build of mpv and ffmpeg, including hw-accel, for centos7/8 and debian~~ |
+| [sshfs-c8](./sshfs-c8) | **UNMAINTAINED** ~~sshfs v3.7.2 for centos8, with crashfixes etc since the official v2.8~~ |
 
 
 # notes
 
 i have entirely given up on these: `mpv`
 
-and these too, but mainly because they're currently not very useful: `ext4magic`, `quiet`, `sshfs`, `syncthing`
+and `unrar` because the license is problematic and `bsdtar` can unpack those anyways
+
+and these too, but mainly because they're currently not very useful: `ext4magic`, `imagemagick`, `quickbms`, `quiet`, `sshfs`, `syncthing`
 
 
 # todo
