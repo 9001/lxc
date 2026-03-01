@@ -1,0 +1,42 @@
+diff --git a/bin/pico2wave.c b/bin/pico2wave.c
+index 74da1f0..4feb5b6 100644
+--- a/bin/pico2wave.c
++++ b/bin/pico2wave.c
+@@ -41,3 +41,3 @@ const char * PICO_LINGWARE_PATH             = picolangdir "/";
+ #else
+-const char * PICO_LINGWARE_PATH             = "./lang/";
++const char * PICO_LINGWARE_PATH             = "./pico2wave-voices/";
+ #endif
+@@ -101,3 +101,3 @@ void printUsage()
+     printf("  -w filename.wav     Write output to this WAV file (extension SHOULD be .wav)\n");
+-    printf("  -l lang             Language (default: \"en-US\")\n");
++    printf("  -l lang             Language (default: \"en-GB\")\n");
+     printf("\n");
+@@ -108,3 +108,3 @@ int main(int argc, char * const argv[]) {
+     char * wavefile = NULL;
+-    char * lang = "en-US";
++    char * lang = "en-GB";
+     int langIndex = -1, langIndexTmp = -1;
+@@ -159,3 +159,3 @@ int main(int argc, char * const argv[]) {
+         }
+-        lang = "en-US";
++        lang = "en-GB";
+         fprintf(stderr, "\n");
+diff --git a/lib/meson.build b/lib/meson.build
+index c6c5f38..194121e 100644
+--- a/lib/meson.build
++++ b/lib/meson.build
+@@ -74,3 +74,3 @@ install_headers(
+ 
+-ttspico = library(
++ttspico = static_library(
+     'ttspico',
+@@ -78,4 +78,2 @@ ttspico = library(
+     dependencies: [math],
+-    soversion: abi_major,
+-    version: abi_major + '.' + abi_minor,
+     install: true
+--- /dev/null
++++ b/oldbinfiles/readme.txt
+@@ -0,0 +1 @@
++echo "<speed level='150'><pitch level='110'>hello world</pitch></speed>" | ./pico2wave | ffmpeg -v 0 -f s16le -ar 16000 -i - -f alsa default 
