@@ -1,22 +1,22 @@
 FROM alpine:3
 MAINTAINER ed <statics@ocv.me>
 
-ENV VER="1.8.0.3" \
-    SHA="600a3387e9756e0937d2db49de9066df03d9818e4042da6b72109d1b5688dd72352754773a19bd2558fe93ec6a8a73e80e7cf2602fd915960f66c403fd89beef"
+ENV VER="1.8.1.1" \
+    SHA="6235c03187724d57bd98b572780ba8c8648fd2530abc206964666191d48683c7a796499620f7499c688cd11010cdc6f5c7706ac6487ef3ecaba75ca16300cbb7"
 
 RUN wget http://www.dest-unreach.org/socat/download/socat-$VER.tar.gz \
     && sha512sum socat-$VER.tar.gz \
     && echo "$SHA  socat-$VER.tar.gz" | sha512sum -c \
-    && wget -O p1.patch https://git.alpinelinux.org/aports/plain/main/socat/netdb-internal.patch?id=50e408d10fadde3eca15b42f9abaf79d301abb2c \
-    && wget -O p2.patch https://git.alpinelinux.org/aports/plain/main/socat/use-linux-headers.patch?id=50e408d10fadde3eca15b42f9abaf79d301abb2c \
+    && wget -O p1.patch https://git.alpinelinux.org/aports/plain/main/socat/use-linux-headers.patch?id=2314c5da5def567a8b93aa1bba5fe288494bc6fc \
     && apk add --no-cache gcc patch perl musl-dev make \
-        openssl-dev>3 linux-headers openssl-libs-static
+        openssl-dev linux-headers openssl-libs-static
 
 RUN tar -xvf socat-$VER.tar.gz \
     && cd socat-$VER \
+    && patch -p1 <../p1.patch \
     && ./configure \
         --disable-readline \
-        CFLAGS="-static" \
+        CFLAGS="-static -Wno-int-conversion" \
         LDFLAGS="-static" \
     && make -j$(nproc)
 

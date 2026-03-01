@@ -10,8 +10,6 @@ all:
 	ls -al rls
 	ldd rls/jq | awk '!/^rls/ && !/statically linked$$/ {exit 1}; 1'
 	rls/jq -h >/dev/null
-	
-	(cd rls && sha512sum * > SHA512SUMS)
 
 sh:
 	@printf "\n\033[36mopening a shell in the most recently created docker image\033[0m\n"

@@ -2,7 +2,7 @@ FROM alpine:latest
 MAINTAINER ed <uefi.shellbin@ocv.me>
 WORKDIR /z
 
-ENV VER="202502"
+ENV VER="202602"
 
 RUN apk add --no-cache gcc g++ musl-dev make git patch \
         bash nasm util-linux-dev util-linux-misc python3 \

@@ -31,8 +31,11 @@ RUN tar -xvf v$VER.tar.gz \
 
 RUN mkdir -p /z/rls \
     && cd flite-$VER/bin/ \
-    && cp -pv flite flite_cmu_us_* /z/rls \
+    && cp -pv flite /z/rls/ \
+    && cp -pv flite_cmu_us_slt /z/rls/flite-slt \
+    && cp -pv flite_cmu_us_kal16 /z/rls/flite-kal \
     && strip /z/rls/* \
+    && echo 'flite-kal -voice cmu_us_slt.flitevox -s duration_stretch=0.9 -f /dev/stdin -o a.wav ; ffmpeg -y -i a.wav -af bandreject=f=172:t=q:w=1,volume=2 b.wav' >/z/rls/cmu_us_slt.txt \
     && mv /z/*.flitevox /z/rls/
 
 
@@ -43,6 +46,9 @@ RUN mkdir -p /z/rls \
 # slt is the best default voice but 13x as expensive as kal16,
 # slt.flitevox is much better but 1.5x more expensive than builtin slt
 #  (flitevox 2.5x more expensive on 5-word jobs, 3x on 2-word jobs)
+#
+# slt has a slightly-moving hum/resonance around 172hz (exact freq
+#  depends on f0_shift and int_f0_target_mean); fix with bandreject
 #
 # below is time spent reading 1000 words using each voice,
 # first column absolute time in seconds,

@@ -3,8 +3,8 @@ MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV VER="1.7.1" \
-    SHA="464861fb2e0d6934b616f1dc7f8002d7dae727c8c0c07b385b813e7522ba1ada8ead4165e1d99c892e3ea76e238c55a15b718c738805419721920f88f8d8478c"
+ENV VER="1.8.1" \
+    SHA="b09d48dbeaac7b552397b75692ed7833afa72186de80d977fb1b887a14ac66c02f677acdd79f9a2736db1fd738b7ce57a39725e34846bfa21ed3728cd7adc187"
 
 RUN wget https://github.com/stedolan/jq/releases/download/jq-$VER/jq-$VER.tar.gz -O jq.tgz \
     && sha512sum jq.tgz \
@@ -12,7 +12,7 @@ RUN wget https://github.com/stedolan/jq/releases/download/jq-$VER/jq-$VER.tar.gz
 
 RUN apk add --no-cache \
         gcc g++ musl-dev make patch linux-headers \
-        automake autoconf libtool m4
+        automake autoconf libtool m4 sed
 
 RUN tar -xvf jq.tgz \
     && cd jq-$VER \

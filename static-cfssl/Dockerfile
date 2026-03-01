@@ -2,9 +2,14 @@ FROM alpine:3 as build
 MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
-ENV VER=1.6.4
-RUN apk add --no-cache go git wget musl-dev \
-    && wget -O arc https://github.com/cloudflare/cfssl/archive/refs/tags/v${VER}.tar.gz
+
+ENV VER=1.6.5 \
+    SHA=b59863d534474ba73efe2dc38b55ba4eb1e0911346b6b9fff7778a3bdc77bf58290ab7173e3ce2cd69f38594dc471ce78632c2aa1cf9188eb6163ca272391185
+
+RUN wget -O arc https://github.com/cloudflare/cfssl/archive/refs/tags/v${VER}.tar.gz \
+    && sha512sum arc \
+    && echo "$SHA  arc" | sha512sum -c \
+    && apk add --no-cache go git wget musl-dev
 
 ENV GOPATH=/z \
     GOROOT=/usr/lib/go \
@@ -13,7 +18,7 @@ ENV GOPATH=/z \
     LDFLAGS="-s -w -X github.com/cloudflare/cfssl/cli/version.version=${VER} -extldflags \"-static\""
 
 
-# https://git.alpinelinux.org/aports/tree/testing/cfssl/APKBUILD?id=bf5a28591665f32bc96254c3471d394318863c6d
+# https://github.com/alpinelinux/aports/blob/master/testing/cfssl/APKBUILD
 # https://github.com/golang/go/issues/26492#issuecomment-435462350
 #
 # go will not have -static until early 1.14; make portable manually

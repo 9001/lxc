@@ -9,7 +9,7 @@ RUN apk add --no-cache \
         gcc g++ musl-dev make patch \
         attr-dev util-linux-dev util-linux-static linux-headers
 
-RUN wget https://tuxera.com/opensource/ntfs-3g_ntfsprogs-$VER.tgz -O ntfs3g.tgz \
+RUN wget https://download.tuxera.com/opensource/ntfs-3g_ntfsprogs-$VER.tgz -O ntfs3g.tgz \
     && sha512sum ntfs3g.tgz \
     && echo "$SHA  ntfs3g.tgz" | sha512sum -c
 

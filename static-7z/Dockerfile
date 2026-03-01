@@ -3,8 +3,8 @@ MAINTAINER ed <statics@ocv.me>
 
 WORKDIR /z
 
-ENV     VER="2408" \
-        SHA="889e9aeaa629d6474a609a15066b2fa7b1353fa5e7255e044297591f565b08b16b885d44f4c4a046f2f9da189599ace300cf61fd9ac0e7bc316fb9d96a18a039"
+ENV     VER="2501" \
+        SHA="5ee146ce993c6d12ad19333dc3545e6c3429212260c22d456390e49ca150e6fcbfc6eae45b5ec61138ae1598d7b4a79d6f2e3ff02929af38039c0ca59823e729"
 
 RUN     wget https://www.7-zip.org/a/7z$VER-src.tar.xz -O 7z.txz \
         && sha512sum 7z.txz \
@@ -16,7 +16,7 @@ RUN     apk add --no-cache \
             gcc g++ musl-dev make patch \
             attr-dev util-linux-dev linux-headers
 
-# https://git.alpinelinux.org/aports/tree/main/7zip/APKBUILD
+# https://github.com/alpinelinux/aports/blob/master/main/7zip/APKBUILD
 RUN     tar -xvf 7z.txz \
         && patch -p1 --binary < 7-zip-flags.patch \
         && patch -p1 --binary < 7-zip-musl.patch \
