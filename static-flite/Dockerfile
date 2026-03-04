@@ -11,11 +11,12 @@ RUN wget https://github.com/festvox/flite/archive/v$VER.tar.gz \
     && echo "$SHA  v$VER.tar.gz" | sha512sum -c \
     && wget http://festvox.org/flite/packed/flite-2.1/voices/cmu_us_slt.flitevox \
     && apk add --no-cache \
-        gcc g++ musl-dev make automake autoconf m4 libtool bzip2
+        gcc g++ musl-dev patch make automake autoconf m4 libtool bzip2
 
+COPY stdout.patch /w/
 RUN tar -xvf v$VER.tar.gz \
     && cd flite-$VER \
-    && ls -al \
+    && patch -p1 </w/stdout.patch \
     && sed -ri 's/cmu_us_kal.*/cmu_us_kal16 cmu_us_slt/' config/ben.lv \
     && CFLAGS="-fPIC" ./configure \
         --disable-shared \
@@ -35,7 +36,8 @@ RUN mkdir -p /z/rls \
     && cp -pv flite_cmu_us_slt /z/rls/flite-slt \
     && cp -pv flite_cmu_us_kal16 /z/rls/flite-kal \
     && strip /z/rls/* \
-    && echo 'flite-kal -voice cmu_us_slt.flitevox -s duration_stretch=0.9 -f /dev/stdin -o a.wav ; ffmpeg -y -i a.wav -af bandreject=f=172:t=q:w=1,volume=2 b.wav' >/z/rls/cmu_us_slt.txt \
+    && printf '%s\n' '#!/bin/bash' '# to flush, say "\n\n.\n" so for example:  hello world\n\n.\ngoodnight\n\n\.\n' './flite-kal -voice cmu_us_slt.flitevox -s duration_stretch=0.9 -o stream | ffmpeg -probesize 32 -v 24 -f s16le -ar 16000 -i - -af bandreject=f=172:t=q:w=1:m=0.9,volume=1.8 -f alsa default' >/z/rls/cmu_us_slt.sh \
+    && chmod 755 /z/rls/cmu_us_slt.sh \
     && mv /z/*.flitevox /z/rls/
 
 

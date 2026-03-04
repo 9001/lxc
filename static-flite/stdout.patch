@@ -1,0 +1,24 @@
+--- a/main/flite_main.c
++++ b/main/flite_main.c
+@@ -166,2 +166,16 @@
+ 
++int stream_to_stdout(const cst_wave *w, int start, int size,
++                     int last, cst_audio_streaming_info *asi)
++{
++    while (size > 0)
++    {
++        size_t n = fwrite(&w->samples[start], sizeof(short), size, stdout);
++        if (!n)
++            return CST_AUDIO_STREAM_STOP;
++        start += n;
++        size -= n;
++    }
++    return CST_AUDIO_STREAM_CONT;
++}
++
+ static void ef_set(cst_features *f,const char *fv,const char *type)
+@@ -389,3 +404,3 @@
+         asi = new_audio_streaming_info();
+-        asi->asc = audio_stream_chunk;
++        asi->asc = stream_to_stdout;
+         feat_set(v->features,"streaming_info",audio_streaming_info_val(asi));
